@@ -30,9 +30,12 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <errno.h>
+#include <string.h>
 
 #include <rtems/mw_uid.h>
+#include <rtems/keyboard.h>
 #include "device.h"
+#include "keymap_standard.h"
 
 extern int close (int fd); /* RTEMS does not include close() in stdio.h */
 
@@ -44,6 +47,9 @@ int     MWKbd_Open (KBDDEVICE *pkd);
 void    MWKbd_Close (void);
 void	MWKbd_GetModifierInfo (MWKEYMOD *modifiers, MWKEYMOD *curmodifiers);
 int	MWKbd_Read (MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode);
+
+static MWKEY TranslateScancode(int scancode, MWKEYMOD modstate);
+static void LoadKernelKeymaps(int fd);
 
 KBDDEVICE kbddev = {
         MWKbd_Open,
