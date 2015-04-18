@@ -11,6 +11,8 @@
 #include "mwtypes.h"				/* public export typedefs*/
 #include "mwsystem.h"
 
+#define MWPSD_DRAWBITMAP
+
 /* Changeable limits and options*/
 #define ALPHABLEND	1			/* =1 to include blending code*/
 #define POLYREGIONS	1			/* =1 includes polygon regions*/
@@ -387,6 +389,11 @@ typedef struct _mwscreendevice {
 			int src_x_fraction, int src_y_fraction,
 			int x_step_fraction, int y_step_fraction,
 			long op);
+	void *	private;	/* driver internal private data */
+    #ifdef MWPSD_DRAWBITMAP
+	void	(*DrawBitmap)(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height,
+			MWIMAGEBITS *imagebits, MWPIXELVAL c);
+    #endif /* MWPSD_DRAWBITMAP */
 } SCREENDEVICE;
 
 /* PSD flags*/

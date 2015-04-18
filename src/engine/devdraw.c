@@ -573,6 +573,14 @@ drawbitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height,
 	psd->DrawBitmap(psd, x, y, width, height, imagebits, gr_foreground);
 	return;
 	*/
+#ifdef MWPSD_DRAWBITMAP
+	if(psd->DrawBitmap) {
+		if (gr_usebg)
+		psd->DrawBitmap(psd, x, y, width, height, imagebits,
+				gr_foreground);
+		return;
+	}
+#endif /* MWPSD_DRAWBITMAP */
 
 	minx = x;
 	maxx = x + width - 1;
