@@ -48,6 +48,11 @@ typedef unsigned long kbdisr_lock_level_t;
 #define KEY_REPFIRST_T	700
 #define KEY_REPNEXT_T	200
 
+#define _reg_PTA_DR MC9328MXL_GPIOA_DR
+#define _reg_PTA_SSR MC9328MXL_GPIOA_SSR
+#define _reg_PTA_DDIR MC9328MXL_GPIOA_DDIR
+#define _reg_PTA_PUEN MC9328MXL_GPIOA_PUEN
+
 #define _reg_PTD_DR MC9328MXL_GPIOD_DR
 #define _reg_PTD_SSR MC9328MXL_GPIOD_SSR
 #define _reg_PTD_DDIR MC9328MXL_GPIOD_DDIR
@@ -74,6 +79,7 @@ KBDDEVICE kbddev = {
 	mx1_kbd_Poll
 };
 
+int mx1_kbd_variat_config;
 
 /*
  *-----------------------------------------------------------
@@ -90,7 +96,7 @@ KBDDEVICE kbddev = {
 #define KBD_RET_CNT 3
 
 static inline
-unsigned char mx1_kbd_onerow(unsigned char scan)
+unsigned char mx1_kbd_onerow_variant_1(unsigned char scan)
 {
 	kbdisr_lock_level_t level;
 	unsigned int scan_mask=(0xff<<23); /*PD*/
@@ -101,7 +107,7 @@ unsigned char mx1_kbd_onerow(unsigned char scan)
 
 	_reg_PTD_DR|=scan_val;
 	_reg_PTD_DR&=scan_val|~scan_mask;
-	_reg_PTD_DR=_reg_PTD_DR; /*Some time to pro[pagate signals*/
+	_reg_PTD_DR=_reg_PTD_DR; /*Some time to propagate signals*/
 	ret=_reg_PTD_SSR;
 
 	kbdisr_unlock(level);
@@ -110,7 +116,7 @@ unsigned char mx1_kbd_onerow(unsigned char scan)
 }
 
 static inline
-void mx1_kbd_setio(void)
+void mx1_kbd_setio_variant_1(void)
 {
 	kbdisr_lock_level_t level;
 	unsigned int scan_mask=(0xff<<23); /*PD*/
@@ -126,6 +132,64 @@ void mx1_kbd_setio(void)
 	kbdisr_unlock(level);
 }
 
+static inline
+unsigned char mx1_kbd_onerow_variant_4(unsigned char scan)
+{
+	kbdisr_lock_level_t level;
+	unsigned int scan_mask=(0xff<<5); /*PA*/
+	unsigned int scan_val=(~scan<<5) & scan_mask; /*PD*/
+	unsigned int ret;
+
+	kbdisr_lock(level);
+
+	_reg_PTA_DR|=scan_val;
+	_reg_PTA_DR&=scan_val|~scan_mask;
+	_reg_PTA_DR=_reg_PTA_DR; /*Some time to propagate signals*/
+	ret=_reg_PTD_SSR;
+
+	kbdisr_unlock(level);
+
+	return (~ret>>20)&7;
+}
+
+static inline
+void mx1_kbd_setio_variant_4(void)
+{
+	kbdisr_lock_level_t level;
+	unsigned int scan_mask=(0xff<<5);  /*PA*/
+	unsigned int ret_mask=(0x7<<20);   /*PD*/
+
+	kbdisr_lock(level);
+
+	_reg_PTA_DR|=scan_mask;
+	_reg_PTA_DDIR|=scan_mask;
+	_reg_PTD_DDIR&=~ret_mask;
+	_reg_PTD_PUEN|=ret_mask;
+
+	kbdisr_unlock(level);
+}
+
+static inline
+unsigned char mx1_kbd_onerow(unsigned char scan)
+{
+	if(mx1_kbd_variat_config == '1')
+		return mx1_kbd_onerow_variant_1(scan);
+	else if(mx1_kbd_variat_config == '4')
+		return mx1_kbd_onerow_variant_4(scan);
+	return 0;
+}
+
+static inline
+void mx1_kbd_setio(void)
+{
+	if(!mx1_kbd_variat_config)
+		mx1_kbd_variat_config='1';
+
+	if(mx1_kbd_variat_config == '1')
+		mx1_kbd_setio_variant_1();
+	else if(mx1_kbd_variat_config == '4')
+		mx1_kbd_setio_variant_4();
+}
 
 typedef struct {
 	MWKEY bc;
@@ -390,6 +454,24 @@ MWKEY mx1_kbd_scan2mwkey(int scan)
 		return mx1_kbd_scan2mwkey_tab[scan].sc;
 	return mx1_kbd_scan2mwkey_tab[scan].bc;
 }
+
+int mx1_kbd_check_key_pressed(MWKEY key)
+{
+  int ret;
+  int scan;
+  scan2mwkey_t *p=mx1_kbd_scan2mwkey_tab+1;
+
+  for(scan=0;scan<KBD_SCAN_CNT;scan++){
+    for(ret=0;ret<KBD_RET_CNT;ret++){
+      if((p->bc==key) || (p->sc==key)){
+        return mx1_kbd_onerow(1<<scan)&(1<<ret);
+      }
+      p++;
+    }
+  }
+  return 0;
+}
+
 
 /*
  *-----------------------------------------------------------
