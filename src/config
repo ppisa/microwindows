@@ -41,7 +41,7 @@ ARCH                     = RTEMS
 BIGENDIAN                = N
 ARMTOOLSPREFIX           = arm-linux-
 MIPSTOOLSPREFIX          = mipsel-linux-
-RTEMSTOOLSPREFIX         = arm-rtems-
+RTEMSTOOLSPREFIX         = arm-rtems4.10-
 
 ####################################################################
 #
@@ -302,10 +302,10 @@ INVERT4BPP               = N
 ifeq ($(ARCH), RTEMS)
 
 # Location & BSP information of the RTEMS build
-RTEMS_BUILD              = /opt/rtems
+RTEMS_BUILD              = /opt/rtems4.10
 RTEMS_BSP                = csb336
 LINK_APP_INTO_SERVER     = Y
-RTEMS_TARGET             = arm-rtems
+RTEMS_TARGET             = arm-rtems4.10
 endif
 
 endif
