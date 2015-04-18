@@ -170,6 +170,7 @@ gen_gettextbits(PMWFONT pfont, int ch, const MWIMAGEBITS **retmap,
 	PMWCFONT		pf = ((PMWCOREFONT)pfont)->cfont;
 	int 			count, width;
 	const MWIMAGEBITS *	bits;
+	int			short_offset_fl;
 
 	/* if char not in font, map to first character by default*/
 	if(ch < pf->firstchar || ch >= pf->firstchar+pf->size)
@@ -180,7 +181,12 @@ gen_gettextbits(PMWFONT pfont, int ch, const MWIMAGEBITS **retmap,
 	/* get font bitmap depending on fixed pitch or not*/
 	/* GB: automatically detect if offset is 16 or 32 bit */
 	if( pf->offset ) {
-		if( ((unsigned long*)pf->offset)[0] >= 0x00010000 )
+#if MW_CPU_BIG_ENDIAN
+		short_offset_fl = ((unsigned short*)pf->offset)[2] != 0;
+#else /*MW_CPU_BIG_ENDIAN*/
+		short_offset_fl = ((unsigned short*)pf->offset)[1] != 0;
+#endif /*MW_CPU_BIG_ENDIAN*/
+		if( short_offset_fl )
 			bits = pf->bits + ((unsigned short*)pf->offset)[ch];
 		else
 			bits = pf->bits + ((unsigned long*)pf->offset)[ch];
