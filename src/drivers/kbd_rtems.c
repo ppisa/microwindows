@@ -44,20 +44,21 @@ int     MWKbd_Open (KBDDEVICE *pkd);
 void    MWKbd_Close (void);
 void	MWKbd_GetModifierInfo (MWKEYMOD *modifiers, MWKEYMOD *curmodifiers);
 int	MWKbd_Read (MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode);
+int     MWKbd_Poll(void);
 
 KBDDEVICE kbddev = {
         MWKbd_Open,
 	MWKbd_Close,
 	MWKbd_GetModifierInfo,
 	MWKbd_Read,
-	NULL
+	MWKbd_Poll
 };
 
 struct MW_UID_MESSAGE m_kbd = { 0 };
 static int kbd_fd   = -1;
 static const char *Q_NAME        = "MWQ";
 #define            Q_MAX_MSGS      20
-
+#define            KBD_DEVICE      "/dev/kbd"
 
 /*
  * Open the keyboard.
@@ -68,7 +69,11 @@ MWKbd_Open (KBDDEVICE *pkd)
         int rc;
 	m_kbd.type = MV_UID_INVALID;
 #if (RTEMS || __rtems__)
+#ifndef KBD_DEVICE
 	kbd_fd = fileno (stdin);
+#else
+	kbd_fd = open( KBD_DEVICE, O_NONBLOCK );
+#endif
 #endif
 	rc = uid_open_queue (Q_NAME, O_CREAT | O_RDWR, Q_MAX_MSGS);
 	uid_register_device (kbd_fd, Q_NAME);
@@ -101,6 +106,15 @@ MWKbd_GetModifierInfo (MWKEYMOD *modifiers, MWKEYMOD *curmodifiers)
 }
 
 /*
+ * Returns non-zero value if event is ready.
+ */
+int
+MWKbd_Poll(void)
+{
+    return ( m_kbd.type != MV_UID_INVALID ) ? 1 : 0;
+}
+
+/*
  * This reads one keystroke from the keyboard, and the current state of
  * the mode keys (ALT, SHIFT, CTRL).  Returns -1 on error, 0 if no data
  * is ready, and 1 on keypress, 2 on keyrelease.  This is a non-blocking call.
@@ -111,9 +125,9 @@ MWKbd_Read (MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode)
         /* check if new KBD event has been posted */
         if( m_kbd.type != MV_UID_INVALID )
         {
-	        *buf = m_kbd.m.kbd.code;
-//	          *modifiers = m_kbd.m.kbd.modifiers;
-		*modifiers = 0;
+		*buf = m_kbd.m.kbd.code;
+		*modifiers = m_kbd.m.kbd.modifiers;
+
 		/* consume event */
 		m_kbd.type = MV_UID_INVALID;
 #if __ECOS
