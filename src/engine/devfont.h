@@ -16,7 +16,7 @@ typedef unsigned long	OUTPIXELVAL;
 typedef MWPIXELVAL	OUTPIXELVAL;
 #endif
 
-#if (UNIX | DOS_DJGPP)
+#if (UNIX | DOS_DJGPP | RTEMS | __rtems__)
 #define strcmpi	strcasecmp
 #endif
 

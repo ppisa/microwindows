@@ -37,7 +37,7 @@
 #include <linuxmt/time.h>
 #endif
 
-#if RTEMS
+#if (RTEMS || __rtems__)
 #include <rtems/mw_uid.h>
 #endif
 

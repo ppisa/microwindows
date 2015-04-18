@@ -65,12 +65,16 @@ typedef unsigned char 		UCHAR;
 typedef unsigned short 		USHORT;
 typedef unsigned long		ULONG;
 #ifndef __ITRON_TYPES_h_ /* FIXME RTEMS hack*/
+#ifndef _ITRONSYS_TYPES_H /* FIXME RTEMS hack*/
 typedef unsigned int		UINT;
+#endif
 #endif
 
 #ifndef __ITRON_TYPES_h_
+#ifndef _ITRONSYS_TYPES_H /* FIXME RTEMS hack*/
 #ifndef COMMON_H	 /* MiniGUI hack*/
 typedef int			BOOL;
+#endif
 #endif
 #endif
 
@@ -81,7 +85,9 @@ typedef USHORT *		PUSHORT;
 typedef UCHAR *			PUCHAR;
 typedef char *			PSZ;
 #ifndef __ITRON_TYPES_h_
+#ifndef _ITRONSYS_TYPES_H /* FIXME RTEMS hack*/
 typedef int                 	INT;
+#endif
 #endif
 typedef unsigned int        	*PUINT;
 
