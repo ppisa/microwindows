@@ -164,6 +164,24 @@ LDFLAGS +=
 endif
 
 ifeq ($(ARCH), RTEMS)
+
+SAVE_CFLAGS := $(CFLAGS)
+SAVE_CPPFLAGS := $(CPPFLAGS)
+SAVE_LDFLAGS := $(LDFLAGS)
+SAVE_LIBS := $(LIBS)
+
+CFLAGS =
+CPPFLAGS =
+LDFLAGS =
+LIBS =
+
+include $(RTEMS_BUILD)/$(RTEMS_TARGET)/$(RTEMS_BSP)/make/target.cfg
+
+CFLAGS += $(SAVE_CFLAGS)
+CPPFLAGS += $(SAVE_CPPFLAGS)
+LDFLAGS += $(SAVE_LDFLAGS)
+LIBS += $(SAVE_LIBS)
+
 COMPILER = gcc
 CXX_COMPILER = g++
 TOOLSPREFIX = $(RTEMSTOOLSPREFIX)
@@ -171,7 +189,7 @@ INCLUDEDIRS += -I$(RTEMS_BUILD)/$(RTEMS_TARGET)/$(RTEMS_BSP)/lib/include \
  -I$(RTEMS_BUILD)/$(RTEMS_TARGET)/$(RTEMS_BSP)/lib/include/networking \
  -I$(RTEMS_BUILD)/$(RTEMS_TARGET)/$(RTEMS_BSP)/lib/include/sys
 DEFINES += -DUNIX=1 -DRTEMS=1
-CFLAGS += -O4 -Wall -Wno-unused -fasm -g \
+CFLAGS += -Os -Wall -Wno-unused -fasm -g \
 -B$(RTEMS_BUILD)/$(RTEMS_TARGET)/$(RTEMS_BSP)/lib/ -specs bsp_specs -qrtems
 endif
 

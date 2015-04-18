@@ -51,7 +51,7 @@ LIBNAME =
 
 # Name of the target which the image will be created to the downloaded to the
 # target box.
-RTEMS_TARGET=i386-rtems
+#RTEMS_TARGET=i386-rtems
 
 
 # Main module -- this module defines the "main()" routine to get compiled.
