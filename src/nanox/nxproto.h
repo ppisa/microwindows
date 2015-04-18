@@ -35,10 +35,19 @@
  */
 #define MAXREQUESTSZ	30000		/* max request size (65532)*/
 
+#if 1 /* HAVE_INTTYPES_H */
+#include <inttypes.h>
+typedef int8_t   BYTE8;
+typedef uint16_t UINT16;
+typedef int16_t  INT16;
+typedef uint32_t UINT32;
+typedef int32_t  INT32;
+#else /* HAVE_INTTYPES_H */
 typedef unsigned char	BYTE8;		/* 1 byte*/
 typedef unsigned short	UINT16;		/* 2 bytes*/
 typedef short		INT16;		/* 2 bytes*/
 typedef unsigned long	UINT32;		/* 4 bytes*/
+#endif /* HAVE_INTTYPES_H */
 
 #if ELKS
 typedef UINT16		IDTYPE;

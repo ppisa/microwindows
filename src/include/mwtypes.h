@@ -13,6 +13,18 @@
 #include <ecosmwconfig.h>
 #endif
 
+#ifndef MW_U32
+/*this can be found on all standard compliant C compilers today, do not invent other hacks*/
+#include <inttypes.h>
+
+typedef uint8_t  MW_U8;
+typedef int8_t   MW_S8;
+typedef uint16_t MW_U16;
+typedef int16_t  MW_S16;
+typedef uint32_t MW_U32;
+typedef int32_t  MW_S32;
+
+#endif /* MW_U32*/
 
 /* builtin font std names*/
 #define MWFONT_SYSTEM_VAR	"System"	/* winFreeSansSerif 11x13 (ansi)*/
@@ -114,8 +126,8 @@
 /* Color defines*/
 #define MWARGB(a,r,g,b)	((MWCOLORVAL)(((unsigned char)(r)|\
 				(((unsigned)(unsigned char)(g))<<8))|\
-				(((unsigned long)(unsigned char)(b))<<16)|\
-				(((unsigned long)(unsigned char)(a))<<24)))
+				(((MW_U32)(unsigned char)(b))<<16)|\
+				(((MW_U32)(unsigned char)(a))<<24)))
 #define MWRGB(r,g,b)	MWARGB(255,(r),(g),(b))		/* rgb full alpha*/
 #define MW0RGB(r,g,b)	MWARGB(0,(r),(g),(b))		/* rgb no alpha*/
 
@@ -126,7 +138,7 @@
 #define MWROP_TO_MODE(op)	((op) >> 24)
 
 /* convert an MWMODE to blitting mode MWROP value*/
-#define MWMODE_TO_ROP(op)	(((long)(op)) << 24)
+#define MWMODE_TO_ROP(op)	(((MW_S32)(op)) << 24)
 
 
 /* 
@@ -259,7 +271,7 @@ typedef unsigned short MWPIXELVAL;
     #if MWPIXEL_FORMAT == MWPF_PALETTE
     typedef unsigned char MWPIXELVAL;
     #else
-      typedef unsigned long MWPIXELVAL;
+      typedef MW_U32 MWPIXELVAL;
     #endif
   #endif
 #endif
@@ -276,7 +288,7 @@ typedef unsigned short MWPIXELVAL;
 typedef int		MWCOORD;	/* device coordinates*/
 typedef int		MWBOOL;		/* boolean value*/
 typedef unsigned char	MWUCHAR;	/* unsigned char*/
-typedef unsigned long	MWCOLORVAL;	/* device-independent color value*/
+typedef MW_U32		MWCOLORVAL;	/* device-independent color value*/
 typedef unsigned short	MWIMAGEBITS;	/* bitmap image unit size*/
 typedef unsigned long	MWTIMEOUT;	/* timeout value */
 typedef unsigned long	MWTEXTFLAGS;	/* MWTF_ text flag*/
@@ -327,9 +339,9 @@ typedef struct {
 	int	 pixtype;	/* format of pixel value*/
 	int	 portrait;	/* current portrait mode*/
 	MWBOOL	 fbdriver;	/* true if running mwin fb screen driver*/
-	unsigned long rmask;	/* red mask bits in pixel*/
-	unsigned long gmask;	/* green mask bits in pixel*/
-	unsigned long bmask;	/* blue mask bits in pixel*/
+	MWCOLORVAL rmask;	/* red mask bits in pixel*/
+	MWCOLORVAL gmask;	/* green mask bits in pixel*/
+	MWCOLORVAL bmask;	/* blue mask bits in pixel*/
 	MWCOORD	 xpos;		/* current x mouse position*/
 	MWCOORD	 ypos;		/* current y mouse position*/
 

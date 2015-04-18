@@ -38,7 +38,7 @@ GdDecodeTIFF(char *path, PMWIMAGEHDR pimage)
 	pimage->width = w;
 	pimage->height = h;
 	pimage->bpp = 32;
-	pimage->pitch = w * sizeof(uint32);
+	pimage->pitch = w * sizeof(MW_U32);
 	pimage->bytesperpixel = 4;
 	pimage->planes = 1;
 	pimage->palsize = 0;
@@ -50,19 +50,19 @@ GdDecodeTIFF(char *path, PMWIMAGEHDR pimage)
 		MWIMAGE_UPSIDEDOWN;
 
 	/* Allocate image */
-	if ((pimage->imagebits = malloc(size * sizeof(uint32))) == NULL)
+	if ((pimage->imagebits = malloc(size * sizeof(MW_U32))) == NULL)
 		goto err;
 
 	TIFFReadRGBAImage(tif, pimage->width, pimage->height,
-		(uint32 *)pimage->imagebits, 0);
+		(MW_U32 *)pimage->imagebits, 0);
 
 #if 0
 	{
 		/* FIXME alpha channel should be blended with destination*/
 		int i;
-		uint32	*rgba;
-		uint32	rgba_r, rgba_g, rgba_b, rgba_a;
-		rgba = (uint32 *)pimage->imagebits;
+		MW_U32	*rgba;
+		MW_U32	rgba_r, rgba_g, rgba_b, rgba_a;
+		rgba = (MW_U32 *)pimage->imagebits;
 		for (i = 0; i < size; ++i, ++rgba) {
 			if ((rgba_a = TIFFGetA(*rgba) + 1) == 256)
 				continue;

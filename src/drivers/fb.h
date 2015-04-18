@@ -22,9 +22,9 @@ extern volatile int mwdrawing;
 #define DRAWOFF
 #endif
 
-typedef unsigned char *		ADDR8;
-typedef unsigned short *	ADDR16;
-typedef unsigned long *		ADDR32;
+typedef MW_U8 *		ADDR8;
+typedef MW_U16 *	ADDR16;
+typedef MW_U32 *	ADDR32;
 
 /* Note that the following ROP macro implements the
  * Porter-Duff rules assuming that source and destination
