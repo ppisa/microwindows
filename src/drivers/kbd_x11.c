@@ -61,7 +61,10 @@ X11_Open(KBDDEVICE *pkd)
 
     if(init_modstate() < 0)
     	return -1;
-    
+
+    /* Do not automatically generate KeyRelease event for every KeyPress event. */
+    XkbSetDetectableAutoRepeat(x11_dpy, True, NULL);
+
     /* return the x11 file descriptor for select */
     return ConnectionNumber(x11_dpy);  
 }
