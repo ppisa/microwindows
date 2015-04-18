@@ -121,6 +121,106 @@ linear1_drawvertline(PSD psd, MWCOORD x, MWCOORD y1, MWCOORD y2, MWPIXELVAL c)
 	DRAWOFF;
 }
 
+#ifdef MWPSD_DRAWBITMAP
+
+/*
+  MWIMAGEBITS  MWIMAGE_BITSPERIMAGE  MWIMAGE_FIRSTBIT  MWIMAGE_NEXTBIT(m)
+  MWIMAGE_TESTBIT MWIMAGE_SHIFTBIT
+*/
+
+#ifdef FOR_SLOW_VAR_SHIFT
+static const unsigned short linear1_bitshift2mul[] =
+	{ 0x0, 0x8000, 0x4000, 0x2000, 0x1000, 0x800, 0x400, 0x200, 0x100 };
+
+#endif /* FOR_SLOW_VAR_SHIFT */
+
+static void
+linear1_drawbitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height,
+		MWIMAGEBITS *imagebits, MWPIXELVAL c)
+{
+	unsigned int 		offset;
+	unsigned short 		prevmask;
+	unsigned char 		mask, xorfl;
+	unsigned char		*beg, *end, *dst;
+	unsigned int		linelen = psd->linelen;
+	unsigned int		bitsize;
+	unsigned int		bitshift;
+	int			b1;
+	MWIMAGEBITS		bitvalue;
+	MWIMAGEBITS		lastmask = ~0;
+	unsigned char		b2;
+
+        if((unsigned)x>=(unsigned)psd->xres) return;
+	if((unsigned)y>=(unsigned)psd->yres) return;
+        if(x+width>psd->xres) return;
+	if(y+height>psd->yres) return;
+
+	xorfl = gr_mode == MWMODE_XOR;
+	if((xorfl&&!c) || !width) return;
+
+        bitsize = MWIMAGE_SIZE(width,1);
+	lastmask <<= bitsize*MWIMAGE_BITSPERIMAGE - width;
+
+	offset = (unsigned)y*linelen;
+	offset += (unsigned)x/8;
+	bitshift = x&7;
+	beg = psd->addr;
+	beg += offset;
+	end = beg + (unsigned)(width+bitshift+7)/8;
+     #ifdef FOR_SLOW_VAR_SHIFT
+	/* hack to enable fast thifting on H8300S, where us*us->ul cost 4c,
+	   but variable shift means local loop */
+        bitshift = linear1_bitshift2mul[bitshift];
+     #endif /* FOR_SLOW_VAR_SHIFT */
+	while(height--) {
+		prevmask = 0;
+		b1 = bitsize;
+		b2 = 0;
+		for(dst=beg;dst<end;dst++) {
+
+			if(!b2) {
+				if(b1) {
+					b1--;
+					b2 = sizeof(MWIMAGEBITS)-1;
+					bitvalue = *imagebits++;
+					if(!b1) bitvalue &= lastmask;
+				} else bitvalue = 0;
+			} else {
+				bitvalue <<= 8;
+				b2--;
+			}
+
+			if(!bitshift) {
+				mask =  bitvalue / (MWIMAGE_FIRSTBIT>>7);
+			} else {
+				mask = prevmask;
+				prevmask = bitvalue / (MWIMAGE_FIRSTBIT>>15);
+			     #ifndef FOR_SLOW_VAR_SHIFT
+				prevmask >>= bitshift;
+			     #else /* FOR_SLOW_VAR_SHIFT */
+				prevmask = ((unsigned long)prevmask*bitshift)>>16;
+			     #endif /* FOR_SLOW_VAR_SHIFT */
+				mask |= prevmask>>8;
+
+			}
+			if(!mask) continue;
+			if(xorfl) {
+				*dst ^= mask;
+			}else{
+				if(c) *dst |= mask;
+				else  *dst &= ~mask;
+			}
+		}
+
+		beg += linelen;
+		end += linelen;
+		offset += linelen;
+		y++;
+	}
+}
+
+#endif /* MWPSD_DRAWBITMAP */
+
 /* srccopy bitblt, opcode is currently ignored*/
 static void
 linear1_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w, MWCOORD h,
@@ -174,5 +274,11 @@ SUBDRIVER fblinear1 = {
 	linear1_drawhorzline,
 	linear1_drawvertline,
 	gen_fillrect,
-	linear1_blit
+	linear1_blit,
+	NULL, /* DrawArea */
+	NULL, /* StretchBlit */
+	NULL, /* StretchBlitEx */
+#ifdef MWPSD_DRAWBITMAP
+	linear1_drawbitmap,
+#endif /* MWPSD_DRAWBITMAP */
 };
