@@ -1751,8 +1751,8 @@ g_row_inc = g_col_inc = 0;
 		ph = py2 - py1;
 		if(pw > 0 && ph > 0) {
 			/* calc proper src/dst offset for stretch rect*/
-g_row_inc = (srch << 16) / dsth;
-g_col_inc = (srcw << 16) / dstw;
+g_row_inc = (srch * 0x10000) / dsth;
+g_col_inc = (srcw * 0x10000) / dstw;
 			sw = pw * srcw / dstw;
 			sh = ph * srch / dsth;
 
