@@ -98,6 +98,9 @@ set_subdriver(PSD psd, PSUBDRIVER subdriver, MWBOOL init)
 	psd->DrawArea 		= subdriver->DrawArea;
 	psd->StretchBlit 	= subdriver->StretchBlit;
 	psd->StretchBlitEx	= subdriver->StretchBlitEx;
+    #ifdef MWPSD_DRAWBITMAP
+	psd->DrawBitmap		= subdriver->DrawBitmap;
+    #endif /* MWPSD_DRAWBITMAP */
 
 	/* call driver init procedure to calc map size and linelen*/
 	if (init && !subdriver->Init(psd))
@@ -119,4 +122,7 @@ get_subdriver(PSD psd, PSUBDRIVER subdriver)
 	subdriver->DrawArea 		= psd->DrawArea;
 	subdriver->StretchBlit 		= psd->StretchBlit;
 	subdriver->StretchBlitEx	= psd->StretchBlitEx;
+    #ifdef MWPSD_DRAWBITMAP
+	subdriver->DrawBitmap		= psd->DrawBitmap;
+    #endif /* MWPSD_DRAWBITMAP */
 }
