@@ -19,7 +19,7 @@
 
 static LPFN_KEYBTRANSLATE mwPtrKeyboardTranslator = NULL;
 
-#if !(DOS_TURBOC | DOS_QUICKC | _MINIX | VXWORKS | RTEMS | __rtems__)
+#if !(DOS_TURBOC | DOS_QUICKC | _MINIX | VXWORKS | RTEMS | __rtems__ | LINUX)
 static int
 abs(int n)
 {
