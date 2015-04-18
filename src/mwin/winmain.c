@@ -27,7 +27,7 @@
 #include <linuxmt/time.h>
 #endif
 
-#if RTEMS || __ECOS
+#if (RTEMS || __rtems__ || __ECOS)
 #include <rtems/mw_uid.h>
 #endif
 
