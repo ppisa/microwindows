@@ -56,6 +56,11 @@ else
 MW_CORE_OBJS += $(MW_DIR_OBJ)/drivers/genfont.o
 endif
 
+ifneq ($(SCRDRIVER),)
+MW_CORE_OBJS += \
+	$(MW_DIR_OBJ)/drivers/scr_$(SCRDRIVER).o \
+	$(MW_DIR_OBJ)/drivers/genfont.o
+else
 ifeq ($(ARCH), ECOS)
 MW_CORE_OBJS += $(MW_DIR_OBJ)/drivers/scr_ecos.o
 else
@@ -69,6 +74,7 @@ MW_CORE_OBJS += \
 	$(MW_DIR_OBJ)/drivers/fbportrait_left.o \
 	$(MW_DIR_OBJ)/drivers/fbportrait_right.o \
 	$(MW_DIR_OBJ)/drivers/fbportrait_down.o
+endif
 endif
 endif
 
