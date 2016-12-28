@@ -1336,7 +1336,7 @@ GrNewWindow(GR_WINDOW_ID parent, GR_COORD x, GR_COORD y, GR_SIZE width,
  * @ingroup nanox_window
  */
 GR_WINDOW_ID
-GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels)
+GrNewPixmapEx(GR_SIZE width, GR_SIZE height, trans_data_format_t format, void *pixels)
 {
 	nxNewPixmapExReq *req;
 	GR_WINDOW_ID 	wid;
@@ -1345,7 +1345,7 @@ GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels)
 	req = AllocReq(NewPixmapEx);
 	req->width = width;
 	req->height = height;
-	req->format = format;
+	req->format = format.trans_data_format_val;
 	if(TypedReadBlock(&wid, sizeof(wid), GrNumNewPixmapEx) == -1)
 		wid = 0;
 	UNLOCK(&nxGlobalLock);
@@ -3089,7 +3089,7 @@ GrDrawImageBits(GR_DRAW_ID id, GR_GC_ID gc, GR_COORD x, GR_COORD y,
 		req->height = step;
 		req->planes = pimage->planes;
 		req->bpp = pimage->bpp;
-		req->data_format = pimage->data_format;
+		req->data_format = pimage->data_format.trans_data_format_val;
 		req->pitch = pimage->pitch;
 		req->palsize = pimage->palsize;
 		req->transcolor = pimage->transcolor;

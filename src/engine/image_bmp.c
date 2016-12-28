@@ -105,7 +105,8 @@ static inline void little_endian_to_host_16(void *addr)
 PSD
 GdDecodeBMP(buffer_t *src, MWBOOL readfilehdr)
 {
-	int			h, i, compression, width, height, bpp, data_format, palsize;
+	int			h, i, compression, width, height, bpp, palsize;
+	trans_data_format_t			data_format;
 	PSD			pmd;
 	DWORD		hdrsize;
 	BMPFILEHEAD	bmpf;
@@ -176,22 +177,22 @@ DPRINTF("bmp bpp %d pal %d\n", bpp, palsize);
 	/* only 1, 4, 8, 16, 24 and 32 bpp bitmaps*/
 	switch(bpp) {
 	case 1:
-		data_format = MWIF_PAL1;
+		data_format.trans_data_format_val = MWIF_PAL1;
 		break;
 	case 4:
-		data_format = MWIF_PAL4;
+		data_format.trans_data_format_val = MWIF_PAL4;
 		break;
 	case 8:
-		data_format = MWIF_PAL8;
+		data_format.trans_data_format_val = MWIF_PAL8;
 		break;
 	case 16:
-		data_format = MWIF_RGB565;
+		data_format.trans_data_format_val = MWIF_RGB565;
 		break;
 	case 24:
-		data_format = MWIF_RGB888;		/* BGR will be converted to RGB*/
+		data_format.trans_data_format_val = MWIF_RGB888;		/* BGR will be converted to RGB*/
 		break;
 	case 32:
-		data_format = MWIF_RGBA8888;	/* converted to 32bpp RGBA w/255 alpha*/
+		data_format.trans_data_format_val = MWIF_RGBA8888;	/* converted to 32bpp RGBA w/255 alpha*/
 		break;
 	default:
 		EPRINTF("GdDecodeBMP: image bpp not 1, 4, 8, 16, 24 or 32\n");
@@ -221,7 +222,7 @@ DPRINTF("bmp bpp %d pal %d\n", bpp, palsize);
 			little_endian_to_host_32(&format);
 		}
 		if (format == 0x7c00)
-			pmd->data_format = MWIF_RGB555;
+			pmd->data_format.trans_data_format_val = MWIF_RGB555;
 		/* else it's 5/6/5 format, no flag required*/
 	}
 

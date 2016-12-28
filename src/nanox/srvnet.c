@@ -116,7 +116,7 @@ GrNewPixmapExWrapper(void *r)
 	GR_WINDOW_ID	wid;
 
 	/* FIXME: Add support for passing info about shared memory segment*/
-	wid = GrNewPixmapEx(req->width, req->height, req->format, NULL);
+	wid = GrNewPixmapEx(req->width, req->height, (trans_data_format_t){req->format}, NULL);
 
 	GsWriteType(current_fd,GrNumNewPixmapEx);
 	GsWrite(current_fd, &wid, sizeof(wid));
@@ -901,7 +901,7 @@ GrDrawImageBitsWrapper(void *r)
 	hdr.height = req->height;
 	hdr.planes = req->planes;
 	hdr.bpp = req->bpp;
-	hdr.data_format = req->data_format;
+	hdr.data_format.trans_data_format_val = req->data_format;
 	hdr.pitch = req->pitch;
 	hdr.palsize = req->palsize;
 	hdr.transcolor = req->transcolor;

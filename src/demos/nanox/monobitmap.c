@@ -40,7 +40,7 @@ getpixmap(void)
 	int				x, y;
 
 	// create 1bpp pixmap, bytemsb allows ft2 text and is compatible with std fblin1.c driver 
-	pixmap = GrNewPixmapEx(320, 240, MWIF_MONOBYTEMSB, NULL);
+	pixmap = GrNewPixmapEx(320, 240, (trans_data_format_t){MWIF_MONOBYTEMSB}, NULL);
 
 	// first third set all 1 bits (pixel set to bit 0 of 0xAABBGGRR MWCOLORVAL)
 	GrSetGCForeground(gc, GR_COLOR_WHITE);
@@ -82,7 +82,7 @@ on_paint(void)
 	GrDestroyFont(font);
 
 	// create 1bpp pixmap for xor image
-	xormap = GrNewPixmapEx(320, 240, MWIF_MONOBYTEMSB, NULL);
+	xormap = GrNewPixmapEx(320, 240, (trans_data_format_t){MWIF_MONOBYTEMSB}, NULL);
 	// set bottom left quarter to white
 	GrSetGCForeground(gc, GR_COLOR_WHITE);
 	GrFillRect(xormap, gc, 0, 120, 160, 120);

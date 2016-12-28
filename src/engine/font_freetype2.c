@@ -1236,10 +1236,10 @@ freetype2_drawtext(PMWFONT pfont, PSD psd, MWCOORD ax, MWCOORD ay,
 
 	/* Determine blitter and data format*/
 	if (drawantialias) {
-		parms.data_format = MWIF_ALPHABYTE;		/* data is 8bpp alpha channel*/
+		parms.data_format.trans_data_format_val = MWIF_ALPHABYTE;		/* data is 8bpp alpha channel*/
 		parms.op = MWROP_BLENDFGBG;				/* blend fg/bg with alpha channel -> dst*/
 	} else {
-		parms.data_format = MWIF_MONOBYTEMSB;	/* data is 1bpp bytes, msb first*/
+		parms.data_format.trans_data_format_val = MWIF_MONOBYTEMSB;	/* data is 1bpp bytes, msb first*/
 		parms.op = MWROP_COPY;					/* copy to dst, 1=fg (0=bg if usebg)*/
 	}
 
@@ -1266,7 +1266,7 @@ freetype2_drawtext(PMWFONT pfont, PSD psd, MWCOORD ax, MWCOORD ay,
 		/* non-cache drawtext routine*/
 		FT_BitmapGlyph bitmapglyph;
 		FT_Bitmap *bitmap;
-		FT_Render_Mode render_mode = (parms.data_format & MWIF_MONO)?
+		FT_Render_Mode render_mode = (parms.data_format.trans_data_format_val & MWIF_MONO)?
 			FT_RENDER_MODE_MONO: FT_RENDER_MODE_NORMAL;
 
 		// duplicated from below for the cache disabled mode which is broken FIXME

@@ -603,7 +603,7 @@ GsInitWindowBuffer(GR_WINDOW *wp, GR_SIZE width, GR_SIZE height)
 		GsDestroyPixmap(wp->buffer);
 	}
 
-	id = GsNewPixmap(width, height, MWIF_RGBA8888, NULL);
+	id = GsNewPixmap(width, height, (trans_data_format_t){MWIF_RGBA8888}, NULL);
 	wp->buffer = GsFindPixmap(id);
 	if (!wp->buffer) {
 		wp->props &= ~(GR_WM_PROPS_BUFFERED | GR_WM_PROPS_DRAWING_DONE);
@@ -712,7 +712,7 @@ usleep(500000);
 	 */
 	if (!(wp->props & GR_WM_PROPS_NOBACKGROUND)) {
 		/* perhaps find a better way of determining whether pixmap needs src_over*/
-		int hasalpha = wp->bgpixmap && (wp->bgpixmap->psd->data_format & MWIF_HASALPHA);
+		int hasalpha = wp->bgpixmap && (wp->bgpixmap->psd->data_format.trans_data_format_val & MWIF_HASALPHA);
 
 		/*
 	 	 * Draw the background of the window.

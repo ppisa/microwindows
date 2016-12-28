@@ -52,7 +52,7 @@ static void em86xx_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w, MWCOO
 #ifdef DRAWAREA_TEST
 static void em86xx_drawarea(PSD psd, driver_gc_t * gc, int op);
 #endif
-static MWBOOL em86xx_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,int data_format,int linelen, int pitch,int size,void *addr);
+static MWBOOL em86xx_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,trans_data_format_t data_format,int linelen, int pitch,int size,void *addr);
 static void em86xx_stretchblit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD dstw, MWCOORD dsth, PSD srcpsd, MWCOORD srcx, MWCOORD srcy, MWCOORD srcw, MWCOORD srch, long op);
 
 #ifdef NO_SWITCH_BUFFER_TEST
@@ -611,7 +611,7 @@ static void em86xx_drawarea(PSD psd, driver_gc_t * gc)
  */
 MWBOOL
 em86xx_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,int linelen,
-	int data_format, int pitch,int size,void *addr)
+	trans_data_format_t data_format, int pitch,int size,void *addr)
 {
 	if (!gen_mapmemgc(mempsd, w, h, planes, bpp, data_format, linelen, pitch, size, addr)) {
 		printf("%s, %d, gen_mapmemgc fail\n", __FUNCTION__, __LINE__);

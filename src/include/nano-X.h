@@ -733,7 +733,7 @@ GR_COLOR	GrGetSysColor(int index);
 GR_WINDOW_ID	GrNewWindow(GR_WINDOW_ID parent, GR_COORD x, GR_COORD y,
 			GR_SIZE width, GR_SIZE height, GR_SIZE bordersize,
 			GR_COLOR background, GR_COLOR bordercolor);
-GR_WINDOW_ID    GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels);
+GR_WINDOW_ID    GrNewPixmapEx(GR_SIZE width, GR_SIZE height, trans_data_format_t format, void *pixels);
 GR_WINDOW_ID	GrNewInputWindow(GR_WINDOW_ID parent, GR_COORD x, GR_COORD y,
 				GR_SIZE width, GR_SIZE height);
 void		GrDestroyWindow(GR_WINDOW_ID wid);
@@ -940,7 +940,7 @@ GR_CURSOR_ID GrSetCursor(GR_WINDOW_ID wid, GR_SIZE width, GR_SIZE height,
 //#define GrSetBorderColor					GrSetWindowBorderColor
 #define GrCreateFont(name,height,plogfont)	GrCreateFontEx(name,height,height,plogfont)
 #define GrSetFontSize(fontid,height)		GrSetFontSizeEx(fontid,height,height)
-#define GrNewPixmap(width,height,pixels)	GrNewPixmapEx(width,height,0,pixels)
+#define GrNewPixmap(width,height,pixels)	GrNewPixmapEx(width,height,(trans_data_format_t){0},pixels)
 
 /* useful function macros*/
 void		GrDrawImageToFit(GR_DRAW_ID id, GR_GC_ID gc, GR_COORD x,

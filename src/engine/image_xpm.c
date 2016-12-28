@@ -101,7 +101,8 @@ GdDecodeXPM(buffer_t * src)
 	int read_xline = 0;
 	int status = LOAD_HEADER;
 	PSD pmd = NULL;
-	int data_format = MWIF_PAL8, palsize;
+	trans_data_format_t data_format = (trans_data_format_t){MWIF_PAL8};
+	int palsize;
 	struct xpm_cmap *colormap[256];	/* A quick hash of 256 spots for colors */
 	char xline[1024];
 	char dline[1024];
@@ -147,10 +148,10 @@ GdDecodeXPM(buffer_t * src)
 
 			/* create 8bpp palette image if colors <= 256, else 32bpp RGBA*/
 			if (colors <= 256) {
-				data_format = MWIF_PAL8;
+				data_format.trans_data_format_val = MWIF_PAL8;
 				palsize = colors;
 			} else {
-				data_format = MWIF_RGBA8888;
+				data_format.trans_data_format_val = MWIF_RGBA8888;
 				palsize = 0;
 			}
 
@@ -229,7 +230,7 @@ DPRINTF("xpm %dbpp\n", pmd->bpp);
 			/* convert to 0xAARRGGB value*/
 			n->color = XPM_parse_color(cstr);
 
-			if (data_format == MWIF_PAL8) {
+			if (data_format.trans_data_format_val == MWIF_PAL8) {
 				if (n->color == MWNOCOLOR)
 					pmd->transcolor = in_color; /* set transcolor to palette index*/
 
@@ -263,7 +264,7 @@ DPRINTF("xpm %dbpp\n", pmd->bpp);
 						goto out;
 					}
 
-					if (data_format == MWIF_PAL8)
+					if (data_format.trans_data_format_val == MWIF_PAL8)
 						dwordcolor = colormap[z]->palette_entry;
 					else
 						dwordcolor = colormap[z]->color;
@@ -293,14 +294,14 @@ DPRINTF("xpm %dbpp\n", pmd->bpp);
 						goto out;
 					}
 
-					if (data_format == MWIF_PAL8)
+					if (data_format.trans_data_format_val == MWIF_PAL8)
 						dwordcolor = n->palette_entry;
 					else
 						dwordcolor = n->color;
 					c += cpp;
 				}
 
-				if (data_format == MWIF_PAL8)
+				if (data_format.trans_data_format_val == MWIF_PAL8)
 					*imageptr++ = (unsigned char)dwordcolor;
 				else {
 					imageptr[0] = (unsigned char)(dwordcolor >> 16);	// R

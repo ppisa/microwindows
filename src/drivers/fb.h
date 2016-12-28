@@ -219,7 +219,7 @@ void setfadelevel(PSD psd, int f);
 
 /* fb.c*/
 PSUBDRIVER select_fb_subdriver(PSD psd);
-int		set_data_format(PSD psd);
+trans_data_format_t	set_data_format(PSD psd);
 void	gen_getscreeninfo(PSD psd, PMWSCREENINFO psi);
 
 /* fbportrait_xxx.c*/

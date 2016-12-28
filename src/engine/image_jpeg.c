@@ -92,7 +92,8 @@ GdDecodeJPEG(buffer_t * src, MWBOOL fast_grayscale)
 	int i;
 	unsigned char magic[8];
 	PSD pmd = NULL;
-	int bpp, data_format, palsize;
+	int bpp, palsize;
+	trans_data_format_t data_format;
 	struct jpeg_source_mgr smgr;
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
@@ -179,10 +180,10 @@ GdDecodeJPEG(buffer_t * src, MWBOOL fast_grayscale)
 	bpp = cinfo.output_components*8;
 	switch (bpp) {
 	case 24:
-		data_format = MWIF_RGB888;
+		data_format.trans_data_format_val = MWIF_RGB888;
 		break;
 	case 8:
-		data_format = MWIF_PAL8;
+		data_format.trans_data_format_val = MWIF_PAL8;
 		break;
 	default:
 		EPRINTF("GdDecodeJPEG: can't handled %dbpp image\n", bpp);

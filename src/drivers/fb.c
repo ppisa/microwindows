@@ -55,7 +55,7 @@ select_fb_subdriver(PSD psd)
 			pdriver = fblinear24;
 			break;
 		case 32:
-			if (psd->data_format == MWIF_RGBA8888)	/* RGBA pixmaps*/
+			if (psd->data_format.trans_data_format_val == MWIF_RGBA8888)	/* RGBA pixmaps*/
 				pdriver = fblinear32rgba;
 			else
 				pdriver = fblinear32bgra;
@@ -77,49 +77,49 @@ select_fb_subdriver(PSD psd)
 }
 
 /* set standard data_format from bpp and pixtype*/
-int
+trans_data_format_t
 set_data_format(PSD psd)
 {
-	int data_format = 0;
+	trans_data_format_t data_format = (trans_data_format_t){0};
 
 	switch(psd->pixtype) {
 	case MWPF_TRUECOLOR8888:
-		data_format = MWIF_BGRA8888;
+		data_format.trans_data_format_val = MWIF_BGRA8888;
 		break;
 	case MWPF_TRUECOLORABGR:
-		data_format = MWIF_RGBA8888;
+		data_format.trans_data_format_val = MWIF_RGBA8888;
 		break;
 	case MWPF_TRUECOLOR888:
-		data_format = MWIF_BGR888;
+		data_format.trans_data_format_val = MWIF_BGR888;
 		break;
 	case MWPF_TRUECOLOR565:
-		data_format = MWIF_RGB565;
+		data_format.trans_data_format_val = MWIF_RGB565;
 		break;
 	case MWPF_TRUECOLOR555:
-		data_format = MWIF_RGB555;
+		data_format.trans_data_format_val = MWIF_RGB555;
 		break;
 	case MWPF_TRUECOLOR1555:
-	        data_format = MWIF_RGB1555;
+	        data_format.trans_data_format_val = MWIF_RGB1555;
 		break;
 	case MWPF_TRUECOLOR332:
-		data_format = MWIF_RGB332;
+		data_format.trans_data_format_val = MWIF_RGB332;
 		break;
 	case MWPF_TRUECOLOR233:
-		data_format = MWIF_BGR233;
+		data_format.trans_data_format_val = MWIF_BGR233;
 		break;
 	case MWPF_PALETTE:
 		switch (psd->bpp) {
 		case 8:
-			data_format = MWIF_PAL8;
+			data_format.trans_data_format_val = MWIF_PAL8;
 			break;
 		case 4:
-			data_format = MWIF_PAL4;
+			data_format.trans_data_format_val = MWIF_PAL4;
 			break;
 		case 2:
-			data_format = MWIF_PAL2;
+			data_format.trans_data_format_val = MWIF_PAL2;
 			break;
 		case 1:
-			data_format = MWIF_PAL1;
+			data_format.trans_data_format_val = MWIF_PAL1;
 			break;
 		}
 		break;
@@ -143,7 +143,7 @@ gen_getscreeninfo(PSD psd, PMWSCREENINFO psi)
 	psi->fbdriver = TRUE;	/* running fb driver, can direct map*/
 	psi->pixtype = psd->pixtype;
 
-	switch (psd->data_format) {
+	switch (psd->data_format.trans_data_format_val) {
 	case MWIF_BGRA8888:
 		psi->rmask = RMASKBGRA;
 		psi->gmask = GMASKBGRA;

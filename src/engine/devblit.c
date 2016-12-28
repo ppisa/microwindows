@@ -22,12 +22,12 @@
 /* find a conversion blit based on data format and blit op*/
 /* used by GdBitmap, GdArea and GdDrawImage*/
 MWBLITFUNC
-GdFindConvBlit(PSD psd, int data_format, int op)
+GdFindConvBlit(PSD psd, trans_data_format_t data_format, int op)
 {
 	MWBLITFUNC convblit = NULL;
 
 	/* determine which blit to use*/
-	switch (data_format) {
+	switch (data_format.trans_data_format_val) {
 	case MWIF_ALPHABYTE:			/* ft2 alias, t1lib alias*/
 		convblit = psd->BlitBlendMaskAlphaByte;		/* conv 8bpp alpha with fg/bg*/
 		break;
@@ -55,9 +55,9 @@ GdFindConvBlit(PSD psd, int data_format, int op)
 
 	case MWIF_BGRA8888:				/* GdArea MWPF_TRUECOLOR8888*/
 		/* assume copy*/
-		if (psd->data_format == MWIF_BGRA8888)
+		if (psd->data_format.trans_data_format_val == MWIF_BGRA8888)
 			convblit = convblit_copy_8888_8888;		/* 32bpp to 32bpp copy*/
-		else if (psd->data_format == MWIF_BGR888)	/* GdArea MWPF_PIXELVAL conversion*/
+		else if (psd->data_format.trans_data_format_val == MWIF_BGR888)	/* GdArea MWPF_PIXELVAL conversion*/
 			convblit = convblit_copy_bgra8888_bgr888; /* 32bpp BGRX to 24bpp BGR copy*/
 		break;
 
@@ -66,14 +66,14 @@ GdFindConvBlit(PSD psd, int data_format, int op)
 		break;
 
 	case MWIF_BGR888:				/* GdArea MWPF_TRUECOLOR888*/
-		if (psd->data_format == MWIF_BGR888)
+		if (psd->data_format.trans_data_format_val == MWIF_BGR888)
 			convblit = convblit_copy_888_888;		/* 24bpp to 24bpp copy*/
 		break;
 
 	case MWIF_RGB565:				/* GdArea MWPF_TRUECOLOR565*/
 	case MWIF_RGB555:				/* GdArea MWPF_TRUECOLOR555*/
 	case MWIF_RGB1555:                              /* GdArea MWPF_TRUECOLOR1555*/
-		if (psd->data_format == data_format)
+		if (psd->data_format.trans_data_format_val == data_format.trans_data_format_val)
 			convblit = convblit_copy_16bpp_16bpp;	/* 16bpp to 16bpp copy*/
 		break;
 	}
@@ -122,10 +122,10 @@ BlitFallback(PSD psd, PMWBLITPARMS gc)
 /* find a framebuffer blit based on source data format and blit op*/
 /* used by GdBlit*/
 static MWBLITFUNC
-GdFindFrameBlit(PSD psd, int src_data_format, int op)
+GdFindFrameBlit(PSD psd, trans_data_format_t src_data_format, int op)
 {
 	/* try conversion blits if possible*/
-	switch (src_data_format) {
+	switch (src_data_format.trans_data_format_val) {
 	case MWIF_RGBA8888:
 		if (op == MWROP_SRC_OVER) {
 			if (psd->BlitSrcOverRGBA8888)
@@ -334,7 +334,7 @@ GdStretchBlit(PSD dstpsd, MWCOORD dx1, MWCOORD dy1, MWCOORD dx2,
 	}
 
 	/* special case RGBA source and src_over/copy*/
-	if (srcpsd->data_format == MWIF_RGBA8888 && (rop == MWROP_SRC_OVER || rop == MWROP_COPY)) {
+	if (srcpsd->data_format.trans_data_format_val == MWIF_RGBA8888 && (rop == MWROP_SRC_OVER || rop == MWROP_COPY)) {
 		convblit = dstpsd->BlitStretchRGBA8888;
 		if (!convblit) {
 			DPRINTF("GdStretchblit: no convblit for RGBA8888 src_over/copy\n");

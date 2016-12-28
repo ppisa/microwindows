@@ -366,7 +366,7 @@ GdConvertImageRGBA(PSD pmd)
 	MWBLITPARMS parms;
 
 	/* check if image conversion supported*/
-	switch (pmd->data_format) {
+	switch (pmd->data_format.trans_data_format_val) {
 	case MWIF_PAL8:			/* 8bpp palette*/
 	//case MWIF_PAL4:
 	//case MWIF_PAL1:
@@ -377,7 +377,7 @@ GdConvertImageRGBA(PSD pmd)
 DPRINTF("Converting %dbpp image to RGBA\n", pmd->bpp);
 
 	/* create RGBA pixmap*/
-	rgba = GdCreatePixmap(&scrdev, pmd->xvirtres, pmd->yvirtres, MWIF_RGBA8888, NULL, 0);
+	rgba = GdCreatePixmap(&scrdev, pmd->xvirtres, pmd->yvirtres, (trans_data_format_t){MWIF_RGBA8888}, NULL, 0);
 	if (!rgba)
 		return pmd;
 
@@ -392,7 +392,7 @@ DPRINTF("Converting %dbpp image to RGBA\n", pmd->bpp);
 	parms.data_out = rgba->addr;
 	parms.dst_pitch = rgba->pitch;
 
-	switch (pmd->data_format) {
+	switch (pmd->data_format.trans_data_format_val) {
 	case MWIF_PAL8:
 		convblit_pal8_rgba8888(&parms);
 		break;
@@ -461,7 +461,7 @@ GdDecodeImage(buffer_t *src, char *path, int flags)
 	}
 
 	/* if not running in palette mode and no conversion blit available upgrade image to RGBA*/
-	op = (pmd->data_format & MWIF_HASALPHA)? MWROP_SRC_OVER: MWROP_COPY;
+	op = (pmd->data_format.trans_data_format_val & MWIF_HASALPHA)? MWROP_SRC_OVER: MWROP_COPY;
 	if (scrdev.pixtype != MWPF_PALETTE && !GdFindConvBlit(pmd, pmd->data_format, op))
 		pmd = GdConvertImageRGBA(pmd);
 

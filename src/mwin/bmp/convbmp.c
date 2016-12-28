@@ -251,7 +251,7 @@ MWPALENTRY	cmap[256];
 long l;
 int g;
 int bytesperpixel;
-int data_format;
+trans_data_format_t data_format;
 UCHAR *p = (UCHAR *)&l;
 
    /* read BMP header*/
@@ -289,7 +289,7 @@ UCHAR *p = (UCHAR *)&l;
    }
 
    /* compute image line size and allocate line buffer*/
-   data_format = 0;
+   data_format.trans_data_format_val = 0;
    if(bitdepth == 1) {
 	pitch = PIX2BYTES(cx);
 	bytesperpixel = 1;
@@ -305,11 +305,11 @@ UCHAR *p = (UCHAR *)&l;
    } else if(bitdepth <= 24) {
 	pitch = cx * 3;
 	bytesperpixel = 3;
-	data_format = MWIF_RGB888;
+	data_format.trans_data_format_val = MWIF_RGB888;
    } else {
 	pitch = cx * 4;
 	bytesperpixel = 4;
-	data_format = MWIF_RGBA8888;
+	data_format.trans_data_format_val = MWIF_RGBA8888;
    }
 
    pitch = (pitch+3) & ~3;

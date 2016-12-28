@@ -50,7 +50,7 @@ resize_demo(void)
 		height = image_info.height;
 	}
 	/* create 32bpp pixmap and draw image w/alpha on it*/
-	p1 = GrNewPixmapEx(width, height, MWIF_RGBA8888, NULL);
+	p1 = GrNewPixmapEx(width, height, (trans_data_format_t){MWIF_RGBA8888}, NULL);
 #if TEST_DRAWIMAGEPARTIAL
 	/* this will expand the image into the same space using stretchblit*/
 	GrDrawImagePartToFit(p1, gc, 0,0, width, height, 0,0, image_info.width/2, image_info.height/2, iid);
@@ -62,7 +62,7 @@ resize_demo(void)
 	if (p2)
 		GrDestroyWindow(p2);
 	/* create another pixmap p2 of same size and bpp with green background*/
-	p2 = GrNewPixmapEx(width, height, MWIF_RGBA8888, NULL);
+	p2 = GrNewPixmapEx(width, height, (trans_data_format_t){MWIF_RGBA8888}, NULL);
 	GrSetGCForeground(gc, GR_COLOR_SEAGREEN);
 	GrFillRect(p2, gc, 0, 0, width, height);
 

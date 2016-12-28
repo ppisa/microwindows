@@ -466,7 +466,7 @@ gen_drawtext(PMWFONT pfont, PSD psd, MWCOORD x, MWCOORD y,
 
 	/* fill in unchanging convblit parms*/
 	parms.op = MWROP_COPY;					/* copy to dst, 1=fg (0=bg if usebg)*/
-	parms.data_format = MWIF_MONOWORDMSB;	/* data is 1bpp words, msb first*/
+	parms.data_format.trans_data_format_val = MWIF_MONOWORDMSB;	/* data is 1bpp words, msb first*/
 	parms.fg_colorval = gr_foreground_rgb;
 	parms.bg_colorval = gr_background_rgb;
 	parms.fg_pixelval = gr_foreground;		/* for palette mask convblit*/
@@ -477,7 +477,7 @@ gen_drawtext(PMWFONT pfont, PSD psd, MWCOORD x, MWCOORD y,
 	parms.dst_pitch = psd->pitch;			/* usually set in GdConversionBlit*/
 	parms.data_out = psd->addr;
 	parms.srcpsd = NULL;
-	convblit = GdFindConvBlit(psd, MWIF_MONOWORDMSB, MWROP_COPY);
+	convblit = GdFindConvBlit(psd, (trans_data_format_t){MWIF_MONOWORDMSB}, MWROP_COPY);
 
 	if (flags & MWTF_DBCSMASK)
 		dbcs_gettextsize(pfont, istr, cc, flags, &width, &height, &base);

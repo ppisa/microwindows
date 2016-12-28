@@ -657,7 +657,7 @@ GdDrawImage(PSD psd, MWCOORD x, MWCOORD y, PMWIMAGEHDR pimage)
 	MWBLITPARMS parms;
 
 	/* use srcover for supported images with alpha*/
-	if (pimage->data_format & MWIF_HASALPHA)
+	if (pimage->data_format.trans_data_format_val & MWIF_HASALPHA)
 		op = MWROP_SRC_OVER;
 
 	/* find conversion blit based on data format*/
@@ -851,10 +851,10 @@ GdDrawImageByPoint(PSD psd, MWCOORD x, MWCOORD y, PMWIMAGEHDR pimage)
 	extra = pimage->pitch - linesize;
 
 	/* Image format in RGB rather than BGR byte order?*/
-	rgborder = (pimage->data_format == MWIF_RGB888 || pimage->data_format == MWIF_RGBA8888);
+	rgborder = (pimage->data_format.trans_data_format_val == MWIF_RGB888 || pimage->data_format.trans_data_format_val == MWIF_RGBA8888);
 
 	/* handle 32bpp RGBA images with alpha channel*/
-	if (pimage->data_format == MWIF_RGBA8888) {
+	if (pimage->data_format.trans_data_format_val == MWIF_RGBA8888) {
 		int32_t *data = (int32_t *)imagebits;
 
 		while (height > 0) {
@@ -1109,7 +1109,7 @@ GdDrawImageByPoint(PSD psd, MWCOORD x, MWCOORD y, PMWIMAGEHDR pimage)
 #else
 				unsigned int pv = (imagebits[1] << 8) | imagebits[0];
 #endif
-				switch (pimage->data_format)
+				switch (pimage->data_format.trans_data_format_val)
 				{
 				  case MWIF_RGB555:
 				    cr =  PIXEL555TOCOLORVAL(pv);
@@ -1260,7 +1260,7 @@ GdBitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, const MWI
 	MWBLITPARMS parms;
 
 	/* try finding blitter, else fallback to drawing point by point*/
-	convblit = GdFindConvBlit(psd, MWIF_MONOWORDMSB, MWROP_COPY);
+	convblit = GdFindConvBlit(psd, (trans_data_format_t){MWIF_MONOWORDMSB}, MWROP_COPY);
 	if (!convblit) {
 		GdBitmapByPoint(psd, x, y, width, height, imagebits, -1);
 		return;
@@ -1270,7 +1270,7 @@ GdBitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, const MWI
 		return;
 
 	parms.op = MWROP_COPY;					/* copy to dst, 1=fg (0=bg if usebg)*/
-	parms.data_format = MWIF_MONOWORDMSB;	/* data is 1bpp words, msb first*/
+	parms.data_format.trans_data_format_val = MWIF_MONOWORDMSB;	/* data is 1bpp words, msb first*/
 	parms.width = width;
 	parms.height = height;
 	parms.dstx = x;
@@ -1425,7 +1425,7 @@ void
 GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixels, int pixtype)
 {
 	int pixsize = 4;
-	int	data_format = 0;
+	trans_data_format_t	data_format = (trans_data_format_t){0};
 	MWBLITFUNC convblit = NULL;
 	MWBLITPARMS parms;
 
@@ -1437,7 +1437,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 	switch(pixtype) {
 	case MWPF_RGB:
 	case MWPF_TRUECOLORABGR:
-		data_format = MWIF_RGBA8888;
+		data_format.trans_data_format_val = MWIF_RGBA8888;
 		break;
 	case MWPF_PIXELVAL:
 		pixsize = sizeof(MWPIXELVALHW);
@@ -1445,8 +1445,8 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 		case 4:
 			if (psd->bpp == 32)
 				data_format = psd->data_format;		/* will use 32bpp copy*/
-			else if (psd->data_format == MWIF_BGR888)
-				data_format = MWIF_BGRA8888;		/* try 32bpp BGRA to 24bpp BGR copy*/
+			else if (psd->data_format.trans_data_format_val == MWIF_BGR888)
+				data_format.trans_data_format_val = MWIF_BGRA8888;		/* try 32bpp BGRA to 24bpp BGR copy*/
 			break;
 		case 2:
 			if (psd->bpp == 16)
@@ -1457,22 +1457,22 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 		}
 		break;
 	case MWPF_TRUECOLOR8888:
-		data_format = MWIF_BGRA8888;
+		data_format.trans_data_format_val = MWIF_BGRA8888;
 		break;
 	case MWPF_TRUECOLOR888:
-		data_format = MWIF_BGR888;
+		data_format.trans_data_format_val = MWIF_BGR888;
 		pixsize = 3;
 		break;
 	case MWPF_TRUECOLOR565:
-		data_format = MWIF_RGB565;
+		data_format.trans_data_format_val = MWIF_RGB565;
 		pixsize = 2;
 		break;
 	case MWPF_TRUECOLOR555:
-		data_format = MWIF_RGB555;
+		data_format.trans_data_format_val = MWIF_RGB555;
 		pixsize = 2;
 		break;
 	case MWPF_TRUECOLOR1555:
-	        data_format = MWIF_RGB1555;
+	        data_format.trans_data_format_val = MWIF_RGB1555;
 		pixsize = 2;
                 break;
 	case MWPF_PALETTE:
@@ -1484,7 +1484,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 	}
 
 	/* find conversion blit based on data format*/
-	if (data_format)
+	if (data_format.trans_data_format_val)
 		convblit = GdFindConvBlit(psd, data_format, MWROP_COPY);
 
 	if (!convblit) {
@@ -1495,7 +1495,7 @@ GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixel
 
 	/* prepare blit parameters*/
 	parms.op = MWROP_COPY;
-	parms.data_format = 0;
+	parms.data_format.trans_data_format_val = 0;
 	parms.width = width;
 	parms.height = height;
 	parms.dstx = x;

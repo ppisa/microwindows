@@ -255,6 +255,10 @@
 #define MWPIXEL_FORMAT	MWPF_PALETTE
 #endif
 
+typedef struct {
+  int32_t trans_data_format_val;
+} trans_data_format_t;
+
 #if (MWPIXEL_FORMAT == MWPF_TRUECOLOR565) || (MWPIXEL_FORMAT == MWPF_TRUECOLOR555)
 typedef unsigned short MWPIXELVALHW;
 #else
@@ -345,7 +349,7 @@ typedef struct {
 	int 	ydpcm;		/* dots/centimeter in y direction */
 	int	 	planes;		/* hw # planes*/
 	int	 	bpp;		/* hw bpp*/
-	int		data_format;/* MWIF_ image data format*/
+	trans_data_format_t		data_format;/* MWIF_ image data format*/
 	int32_t	ncolors;	/* hw number of colors supported*/
 	int 	fonts;		/* number of built-in fonts */
 	int 	buttons;	/* buttons which are implemented */
@@ -458,7 +462,7 @@ typedef struct {
 /* GdConversionBlit parameter structure*/
 typedef struct {
 	int			op;				/* MWROP operation requested*/
-	int			data_format;	/* MWIF_ image data format*/
+	trans_data_format_t			data_format;	/* MWIF_ image data format*/
 	MWCOORD		width, height;	/* width and height for src and dest*/
 	MWCOORD		dstx, dsty;		/* dest x, y*/
 	MWCOORD		srcx, srcy;		/* source x, y*/
@@ -819,7 +823,7 @@ typedef struct {
 	int		height;		/* image height in pixels*/
 	int		planes;		/* # image planes*/
 	int		bpp;		/* bits per pixel*/
-	int		data_format;/* MWIF_ image data format*/
+	trans_data_format_t		data_format;/* MWIF_ image data format*/
 	unsigned int pitch;	/* bytes per line*/
 	MWUCHAR *imagebits;	/* image bits (dword padded)*/
 	int		palsize;	/* palette size*/
@@ -835,7 +839,7 @@ typedef struct {
 	int 	height;		/* image height in pixels*/
 	int		planes;		/* # image planes*/
 	int		bpp;		/* bits per pixel (1, 4 or 8)*/
-	int		data_format;/* MWIF image data format*/
+	trans_data_format_t		data_format;/* MWIF image data format*/
 	unsigned int pitch;	/* bytes per line*/
 	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
 	int		palsize;	/* palette size*/

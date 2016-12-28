@@ -51,7 +51,8 @@ GdDecodePNG(buffer_t * src)
 	png_uint_32 width, height;
 	int bit_depth, color_type, i;
 	double file_gamma;
-	int channels, data_format;
+	int channels;
+	trans_data_format_t data_format;
 	PSD pmd;
 
 	GdImageBufferSeekTo(src, 0UL);
@@ -137,7 +138,7 @@ GdDecodePNG(buffer_t * src)
 	}
 
 	/* set image data format*/
-	data_format = (channels == 4)? MWIF_RGBA8888: MWIF_RGB888;
+	data_format.trans_data_format_val = (channels == 4)? MWIF_RGBA8888: MWIF_RGB888;
 
 	//pimage->pitch = width * channels * (bit_depth / 8);
 	//bpp = channels * 8;

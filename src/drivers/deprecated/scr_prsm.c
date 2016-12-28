@@ -61,7 +61,7 @@ void wr_rect2(int x1, int x2, int y1, int y2, unsigned char *buf);
 
 /* dummy routines for now */
 static MWBOOL VB_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-	int data_format,int linelen,int pitch,int size,void *addr);
+	trans_data_format_t data_format,int linelen,int pitch,int size,void *addr);
 
 
 SCREENDEVICE	scrdev = {
@@ -289,7 +289,7 @@ VB_blit(PSD destpsd,MWCOORD destx,MWCOORD desty,MWCOORD w,MWCOORD h,
 
 static MWBOOL
 VB_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,int linelen,
-	int data_format, int pitch,int size,void *addr)
+	trans_data_format_t data_format, int pitch,int size,void *addr)
 {
 	return 0;
 }

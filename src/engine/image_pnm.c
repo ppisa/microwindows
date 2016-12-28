@@ -31,7 +31,8 @@ GdDecodePNM(buffer_t *src)
 	int type = PNM_TYPE_NOTPNM, binary = 0, gothdrs = 0, scale = 0;
 	int ch, x = 0, y = 0, i, n, mask, col1, col2, col3;
 	PSD pmd;
-	int width = 0, height = 0, data_format, palsize = 0;
+	int width = 0, height = 0, palsize = 0;
+	trans_data_format_t data_format;
 	char buf[256];
 
 	GdImageBufferSeekTo(src, 0UL);
@@ -67,7 +68,7 @@ GdDecodePNM(buffer_t *src)
 
 			width = strtol(sptr, &sptr, 10);
 			height = strtol(sptr, &sptr, 10);
-			data_format = MWIF_PAL1;
+			data_format.trans_data_format_val = MWIF_PAL1;
 			palsize = 2;
 			gothdrs = 1;
 			break;
@@ -82,7 +83,7 @@ GdDecodePNM(buffer_t *src)
 				char *sptr = buf;
 
 				i = strtol(sptr, NULL, 10);
-				data_format = MWIF_RGB888;
+				data_format.trans_data_format_val = MWIF_RGB888;
 				if(i > 255) {
 					EPRINTF("GdDecodePNM: PPM files must be 24bpp\n");
 					return NULL;

@@ -456,7 +456,7 @@ ReadImage(buffer_t* src, int len, int height, int cmapSize,
 	return NULL;
     }
     /*image = ImageNewCmap(len, height, cmapSize);*/
-    pmd = GdCreatePixmap(&scrdev, len, height, MWIF_PAL8, NULL, cmapSize);
+    pmd = GdCreatePixmap(&scrdev, len, height, (trans_data_format_t){MWIF_PAL8}, NULL, cmapSize);
     if (!pmd)
     	return NULL;
 

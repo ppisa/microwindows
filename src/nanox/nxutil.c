@@ -225,7 +225,7 @@ GrNewPixmapFromData(GR_SIZE width, GR_SIZE height, GR_COLOR foreground,
 	GR_GC_ID gc;
 	GR_BITMAP *buf;
 
-	pid = GrNewPixmapEx(width, height, 0, NULL);
+	pid = GrNewPixmapEx(width, height, (trans_data_format_t){0}, NULL);
 	if (pid) {
 		gc = GrNewGC();
 		GrSetGCForeground(gc, foreground);
