@@ -1981,7 +1981,7 @@ GrNewInputWindow(GR_WINDOW_ID parent, GR_COORD x, GR_COORD y,
  * for offscreen drawing
  */
 GR_WINDOW_ID
-GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels)
+GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int32_t format, void *pixels)
 {
 	GR_WINDOW_ID id;
 
@@ -1993,7 +1993,7 @@ GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels)
 }
 
 GR_WINDOW_ID
-GsNewPixmap(GR_SIZE width, GR_SIZE height, int format, void *pixels)
+GsNewPixmap(GR_SIZE width, GR_SIZE height, int32_t format, void *pixels)
 {
 	GR_PIXMAP	*pp;
 	PSD			psd;

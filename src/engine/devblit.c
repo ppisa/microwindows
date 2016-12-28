@@ -22,7 +22,7 @@
 /* find a conversion blit based on data format and blit op*/
 /* used by GdBitmap, GdArea and GdDrawImage*/
 MWBLITFUNC
-GdFindConvBlit(PSD psd, int data_format, int op)
+GdFindConvBlit(PSD psd, int32_t data_format, int op)
 {
 	MWBLITFUNC convblit = NULL;
 
@@ -122,7 +122,7 @@ BlitFallback(PSD psd, PMWBLITPARMS gc)
 /* find a framebuffer blit based on source data format and blit op*/
 /* used by GdBlit*/
 static MWBLITFUNC
-GdFindFrameBlit(PSD psd, int src_data_format, int op)
+GdFindFrameBlit(PSD psd, int32_t src_data_format, int op)
 {
 	/* try conversion blits if possible*/
 	switch (src_data_format) {

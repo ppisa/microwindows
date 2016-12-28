@@ -85,7 +85,7 @@ static void EM8400_fillrect(PSD psd,MWCOORD x1,MWCOORD y1,MWCOORD x2,MWCOORD y2,
 static void EM8400_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w, MWCOORD h,
 		PSD srcpsd, MWCOORD srcx, MWCOORD srcy, long op);
 static MWBOOL EM8400_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-                int data_format,int linelen, int pitch, ,int size,void *addr);
+                int32_t data_format,int linelen, int pitch, ,int size,void *addr);
 
 SCREENDEVICE	scrdev = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL,
@@ -417,7 +417,7 @@ EM8400_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w, MWCOORD h,
 
 static MWBOOL
 EM8400_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-	int data_format, int linelen,int pitch, int size,void *addr)
+	int32_t data_format, int linelen,int pitch, int size,void *addr)
 {
 	extern SUBDRIVER fblinear24;
 

@@ -422,7 +422,7 @@ void		GsClearWindow(GR_WINDOW *wp, GR_COORD x, GR_COORD y,
 void		GsUnrealizeWindow(GR_WINDOW *wp, GR_BOOL temp_unmap);
 void		GsRealizeWindow(GR_WINDOW *wp, GR_BOOL temp);
 void		GsDestroyWindow(GR_WINDOW *wp);
-GR_WINDOW_ID GsNewPixmap(GR_SIZE width, GR_SIZE height, int format, void *pixels);
+GR_WINDOW_ID GsNewPixmap(GR_SIZE width, GR_SIZE height, int32_t format, void *pixels);
 void		GsDestroyPixmap(GR_PIXMAP *pp);
 void		GsSetPortraitMode(int mode);
 void		GsSetPortraitModeFromXY(GR_COORD rootx, GR_COORD rooty);

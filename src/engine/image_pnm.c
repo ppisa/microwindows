@@ -31,7 +31,8 @@ GdDecodePNM(buffer_t *src)
 	int type = PNM_TYPE_NOTPNM, binary = 0, gothdrs = 0, scale = 0;
 	int ch, x = 0, y = 0, i, n, mask, col1, col2, col3;
 	PSD pmd;
-	int width = 0, height = 0, data_format, palsize = 0;
+	int width = 0, height = 0, palsize = 0;
+	int32_t data_format;
 	char buf[256];
 
 	GdImageBufferSeekTo(src, 0UL);

@@ -80,12 +80,12 @@ static void VGA_getscreeninfo(PSD psd,PMWSCREENINFO psi);;
 #endif
 static void VGA_setpalette(PSD psd,int first,int count,MWPALENTRY *pal);
 static MWBOOL VGA_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-		int data_format,int linelen,int pitch,int size,void *addr);
+		int32_t data_format,int linelen,int pitch,int size,void *addr);
 static void NULL_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w,
 		MWCOORD h, PSD srcpsd, MWCOORD srcx, MWCOORD srcy, long op) {}
 static PSD  NULL_allocatememgc(PSD psd) { return NULL; }
 static MWBOOL NULL_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-			int data_format,int linelen,int pitch, int size,void *addr) { return 0; }
+			int32_t data_format,int linelen,int pitch, int size,void *addr) { return 0; }
 static void NULL_freememgc(PSD mempsd) {}
 
 SCREENDEVICE	scrdev = {
@@ -270,7 +270,7 @@ VGA_setpalette(PSD psd,int first,int count,MWPALENTRY *pal)
 /* initialize memory device with passed parms, and select suitable fb driver*/
 static MWBOOL
 VGA_mapmemgc(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,int linelen,
-	int data_format, int pitch, int size,void *addr)
+	int32_t data_format, int pitch, int size,void *addr)
 {
 	extern SUBDRIVER memplan4;
 

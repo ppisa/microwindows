@@ -77,10 +77,10 @@ select_fb_subdriver(PSD psd)
 }
 
 /* set standard data_format from bpp and pixtype*/
-int
+int32_t
 set_data_format(PSD psd)
 {
-	int data_format = 0;
+	int32_t data_format = 0;
 
 	switch(psd->pixtype) {
 	case MWPF_TRUECOLOR8888:

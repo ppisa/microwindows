@@ -1336,7 +1336,7 @@ GrNewWindow(GR_WINDOW_ID parent, GR_COORD x, GR_COORD y, GR_SIZE width,
  * @ingroup nanox_window
  */
 GR_WINDOW_ID
-GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int format, void *pixels)
+GrNewPixmapEx(GR_SIZE width, GR_SIZE height, int32_t format, void *pixels)
 {
 	nxNewPixmapExReq *req;
 	GR_WINDOW_ID 	wid;

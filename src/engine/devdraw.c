@@ -1425,7 +1425,7 @@ void
 GdArea(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height, void *pixels, int pixtype)
 {
 	int pixsize = 4;
-	int	data_format = 0;
+	int32_t	data_format = 0;
 	MWBLITFUNC convblit = NULL;
 	MWBLITPARMS parms;
 

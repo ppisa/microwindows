@@ -105,7 +105,8 @@ static inline void little_endian_to_host_16(void *addr)
 PSD
 GdDecodeBMP(buffer_t *src, MWBOOL readfilehdr)
 {
-	int			h, i, compression, width, height, bpp, data_format, palsize;
+	int			h, i, compression, width, height, bpp, palsize;
+	int32_t			data_format;
 	PSD			pmd;
 	DWORD		hdrsize;
 	BMPFILEHEAD	bmpf;

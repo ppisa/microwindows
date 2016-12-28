@@ -139,7 +139,7 @@ typedef struct _mwscreendevice {
 	MWCOORD	yvirtres;	/* Y drawing res (will be flipped in portrait mode) */
 	int		planes;		/* # planes*/
 	int		bpp;		/* # bpp*/
-	int 	data_format;/* MWIF_ image data format*/
+	int32_t 	data_format;/* MWIF_ image data format*/
 	unsigned int pitch;	/* row length in bytes*/
 	unsigned char *addr;/* address of memory allocated (memdc or fb)*/
 	int		palsize;	/* palette size*/
@@ -161,7 +161,7 @@ typedef struct _mwscreendevice {
 	void	(*GetScreenInfo)(PSD psd,PMWSCREENINFO psi);
 	PSD		(*AllocateMemGC)(PSD psd);
 	MWBOOL	(*MapMemGC)(PSD mempsd,MWCOORD w,MWCOORD h,int planes,int bpp,
-			int data_format,unsigned int pitch,int size,void *addr);
+			int32_t data_format,unsigned int pitch,int size,void *addr);
 	void	(*FreeMemGC)(PSD mempsd);
 	void	(*SetPortrait)(PSD psd,int portraitmode);
 	void	(*Update)(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height);
@@ -284,7 +284,7 @@ extern MWCOLORVAL gr_foreground_rgb;/* current fg color in 0xAARRGGBB format*/
 extern MWCOLORVAL gr_background_rgb;
 
 /* devblit.c*/
-MWBLITFUNC GdFindConvBlit(PSD psd, int data_format, int op);
+MWBLITFUNC GdFindConvBlit(PSD psd, int32_t data_format, int op);
 void	GdConversionBlit(PSD psd, PMWBLITPARMS parms);
 void	GdConvBlitInternal(PSD psd, PMWBLITPARMS gc, MWBLITFUNC convblit);
 void	GdBlit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD width, MWCOORD height,

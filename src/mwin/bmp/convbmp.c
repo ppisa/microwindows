@@ -251,7 +251,7 @@ MWPALENTRY	cmap[256];
 long l;
 int g;
 int bytesperpixel;
-int data_format;
+int32_t data_format;
 UCHAR *p = (UCHAR *)&l;
 
    /* read BMP header*/

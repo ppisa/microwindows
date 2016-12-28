@@ -51,7 +51,8 @@ GdDecodePNG(buffer_t * src)
 	png_uint_32 width, height;
 	int bit_depth, color_type, i;
 	double file_gamma;
-	int channels, data_format;
+	int channels;
+	int32_t data_format;
 	PSD pmd;
 
 	GdImageBufferSeekTo(src, 0UL);

@@ -101,7 +101,8 @@ GdDecodeXPM(buffer_t * src)
 	int read_xline = 0;
 	int status = LOAD_HEADER;
 	PSD pmd = NULL;
-	int data_format = MWIF_PAL8, palsize;
+	int32_t data_format = MWIF_PAL8;
+	int palsize;
 	struct xpm_cmap *colormap[256];	/* A quick hash of 256 spots for colors */
 	char xline[1024];
 	char dline[1024];

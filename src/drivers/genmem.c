@@ -15,12 +15,13 @@
 
 /* alloc and initialize a new memory drawing surface (memgc)*/
 PSD
-GdCreatePixmap(PSD rootpsd, MWCOORD width, MWCOORD height, int format, void *pixels, int palsize)
+GdCreatePixmap(PSD rootpsd, MWCOORD width, MWCOORD height, int32_t format, void *pixels, int palsize)
 {
 	PSD		pmd;
-	int 	bpp, planes, data_format, pixtype;
+	int 	bpp, planes, pixtype;
+	int32_t data_format;
 	unsigned int size, pitch;
-   
+
 	if (width <= 0 || height <= 0)
 		return NULL;
 
@@ -171,7 +172,7 @@ gen_allocatememgc(PSD psd)
  * in non-portrait mode.
  */
 MWBOOL
-gen_mapmemgc(PSD mempsd, MWCOORD w, MWCOORD h, int planes, int bpp, int data_format,
+gen_mapmemgc(PSD mempsd, MWCOORD w, MWCOORD h, int planes, int bpp, int32_t data_format,
 	unsigned int pitch, int size, void *addr)
 {
 	PSUBDRIVER subdriver;

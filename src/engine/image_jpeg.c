@@ -92,7 +92,8 @@ GdDecodeJPEG(buffer_t * src, MWBOOL fast_grayscale)
 	int i;
 	unsigned char magic[8];
 	PSD pmd = NULL;
-	int bpp, data_format, palsize;
+	int bpp, palsize;
+	int32_t data_format;
 	struct jpeg_source_mgr smgr;
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
