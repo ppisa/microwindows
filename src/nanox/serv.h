@@ -10,7 +10,7 @@
  * These definitions are not to be used by clients.
  */
 
-#if NX_PER_CLIENT_DATA && !defined(_NO_SVR_MAPPING)
+#if defined(NX_PER_CLIENT_DATA) && NX_PER_CLIENT_DATA && !defined(_NO_SVR_MAPPING)
 /*
  * In a single process, multi-threaded environment (NX_PER_CLIENT_DATA),
  * the server and the client code share the same namespace.  This means

@@ -11,7 +11,7 @@
 #include "nxproto.h"
 #include "lock.h"
 
-#if !NX_PER_CLIENT_DATA
+#if !defined(NX_PER_CLIENT_DATA) || !NX_PER_CLIENT_DATA
 static REQBUF	reqbuf;		/* request buffer*/
 extern int 	nxSocket;
 extern char *	nxSharedMem;

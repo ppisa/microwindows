@@ -11,11 +11,11 @@
 #include "uni_std.h"
 #include "sys_time.h"
 
-#if RTEMS
+#if defined(RTEMS) && RTEMS
 #include <rtems/mw_uid.h>
 #endif
 
-#if __ECOS
+#if defined(__ECOS) && __ECOS
 #include <cyg/kernel/kapi.h>
 #endif
 
@@ -278,7 +278,7 @@ MwSelect(BOOL canBlock)
 	 */
 	timeout = tout.tv_sec = tout.tv_usec = 0L;
 	to = &tout;
-#if NUTTX
+#if defined(NUTTX) && NUTTX
 	int poll = !canBlock;
 #else
 	int poll = (!canBlock || dragwp);		/* just poll if can't block or window move in progress*/

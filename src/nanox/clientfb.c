@@ -15,7 +15,7 @@
 #include <sys/mman.h>
 #endif
 
-#if !NX_PER_CLIENT_DATA
+#if !defined(NX_PER_CLIENT_DATA) || !NX_PER_CLIENT_DATA
 LOCK_EXTERN(nxGlobalLock);	/* global lock for threads safety*/
 #endif
 

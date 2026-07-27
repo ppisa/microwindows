@@ -11,7 +11,7 @@
  */
 #define MWINCLUDECOLORS
 #include <stdlib.h>
-#if NX_PER_CLIENT_DATA
+#if defined(NX_PER_CLIENT_DATA) && NX_PER_CLIENT_DATA
 #include "serv.h"
 #endif
 #include "nano-X.h"
