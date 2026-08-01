@@ -1043,38 +1043,70 @@ int     GdError(const char *format, ...);
   #define main	rtems_main
 #endif
 
+#if NX_PER_CLIENT_DATA
 #if __ECOS
 #include <sys/select.h>
 #include <cyg/kernel/kapi.h>
-/*
- * In a single process, multi-threaded environment, we need to keep
- * all static data of shared code in a structure, with a pointer to
- * the structure to be stored in thread-local storage
- */
-typedef struct {                                /* Init to: */
-    int                 _nxSocket;              /*  -1 */
-    MWMUTEX	 	_nxGlobalLock;
-    int                 _storedevent;           /* 0 */
-    GR_EVENT            _storedevent_data;      /* no init(0) */
-    int                 _regfdmax;              /* -1 */
-    fd_set		_regfdset;		/* FD_ZERO */
-    GR_FNCALLBACKEVENT  _GrErrorFunc;           /* GrDefaultErrorHandler */
-    REQBUF              _reqbuf;
-    EVENT_LIST          *_evlist;
-} ecos_nanox_client_data;
 
 extern int     ecos_nanox_client_data_index;
 
+#define GET_PER_THREAD_DATA()                                           \
+    (nanox_client_data_per_thread *)                                    \
+        cyg_thread_get_data((cyg_ucount32)ecos_nanox_client_data_index)
+
+#define STORE_PER_THREAD_DATA(dptr)                                     \
+    {                                                                   \
+        ecos_nanox_client_data_index = data;                            \
+        cyg_thread_set_data(ecos_nanox_client_data_index, (CYG_ADDRWORD)(dptr)); \
+    }
+
+#else
+#include <pthread.h>
+#include "lock.h"
+
+extern pthread_once_t g_nanox_data_key_once;
+extern pthread_key_t  g_nanox_data_key;
+void make_nanox_data_key(void);
+
+#define GET_PER_THREAD_DATA()                                           \
+    (nanox_client_data_per_thread *)pthread_getspecific(g_nanox_data_key)
+
+#define STORE_PER_THREAD_DATA(dptr)                                     \
+    {                                                                   \
+        pthread_once(&g_nanox_data_key_once, make_nanox_data_key);      \
+        pthread_setspecific(g_nanox_data_key, (dptr));                  \
+    }
+
+#endif
+
+/*
+ * In a single process, multi-threaded environment, we need to keep
+ * all static data of shared code in a structure, with a pointer to
+ * the structure to be stored in thread-local storage.  This allows
+ * several client tasks/threads to run at the same time, each with its
+ * own socket and event queue.
+ */
+typedef struct {                                /* Init to: */
+    int                 _nxSocket;              /*  -1 */
+    MWMUTEX             _nxGlobalLock;
+    int                 _storedevent;           /* 0 */
+    GR_EVENT            _storedevent_data;      /* no init(0) */
+    int                 _regfdmax;              /* -1 */
+    fd_set              _regfdset;              /* FD_ZERO */
+    GR_FNCALLBACKEVENT  _GrErrorFunc;           /* GrDefaultErrorHandler */
+    REQBUF              _reqbuf;
+    EVENT_LIST          *_evlist;
+} nanox_client_data_per_thread;
+
 #define ACCESS_PER_THREAD_DATA()                                        \
-    ecos_nanox_client_data *data = (ecos_nanox_client_data*)            \
-        cyg_thread_get_data((cyg_ucount32)ecos_nanox_client_data_index);
+    nanox_client_data_per_thread *data = GET_PER_THREAD_DATA();
 
 #define INIT_PER_THREAD_DATA()                                                  \
     {                                                                           \
-        ecos_nanox_client_data *dptr = malloc(sizeof(ecos_nanox_client_data));  \
-        ecos_nanox_client_data_index = data;                                    \
+        nanox_client_data_per_thread *dptr =                                     \
+            malloc(sizeof(nanox_client_data_per_thread));                        \
         dptr->_nxSocket = -1;                                                   \
-        dptr->nxGlobalLock = 0;                                                 \
+        dptr->_nxGlobalLock = 0;                                                 \
         dptr->_storedevent = 0;                                                 \
         dptr->_regfdmax = -1;                                                   \
         FD_ZERO(&dptr->_regfdset);                                              \
@@ -1083,7 +1115,7 @@ extern int     ecos_nanox_client_data_index;
         dptr->_reqbuf.bufmax = NULL;                                            \
         dptr->_reqbuf.buffer = NULL;                                            \
         dptr->_evlist = NULL;                                                   \
-        cyg_thread_set_data(ecos_nanox_client_data_index,(CYG_ADDRWORD)dptr);   \
+        STORE_PER_THREAD_DATA(dptr);                                            \
     }
 
 #define nxSocket                (data->_nxSocket)
@@ -1098,6 +1130,7 @@ extern int     ecos_nanox_client_data_index;
 
 #else
 #define ACCESS_PER_THREAD_DATA()
+#define INIT_PER_THREAD_DATA()
 #endif
 
 #endif /* _NANO_X_H*/

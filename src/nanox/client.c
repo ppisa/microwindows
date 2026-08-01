@@ -71,7 +71,7 @@
  */
 #define SHM_BLOCK_SIZE	4096
 
-#if !__ECOS
+#if !NX_PER_CLIENT_DATA
 /* exported global data */
 int 	   nxSocket = -1;	/* The network socket descriptor */
 LOCK_DECLARE(nxGlobalLock);	/* global lock for threads safety*/
@@ -83,13 +83,6 @@ static int nxSharedMemSize;	/* Size in bytes of shared mem segment*/
 static int regfdmax = -1;	/* GrRegisterInput globals*/
 static fd_set regfdset;
 
-/**
- * Human-readable error strings.
- */
-const char *nxErrorStrings[] = {
-	GR_ERROR_STRINGS
-};
-
 static EVENT_LIST *	evlist;
 
 /*
@@ -100,13 +93,36 @@ static EVENT_LIST *	evlist;
  */
 static GR_FNCALLBACKEVENT ErrorFunc = GrDefaultErrorHandler;
 
-#else /* __ECOS*/
+#else /* NX_PER_CLIENT_DATA */
 /*
- * eCos uses a thread data pointer to store all statics in...
+ * In a single process, multi-threaded environment, we need to keep
+ * all static data of shared code in a structure, with a pointer to
+ * the structure to be stored in thread-local storage.  This allows
+ * several client tasks/threads to run at the same time, each with its
+ * own socket and event queue.
  */
+#if __ECOS
 int ecos_nanox_client_data_index = CYGNUM_KERNEL_THREADS_DATA_MAX;
+#else
+#include <pthread.h>
+pthread_once_t g_nanox_data_key_once = PTHREAD_ONCE_INIT;
+pthread_key_t  g_nanox_data_key;
+
+void make_nanox_data_key(void)
+{
+  pthread_key_create(&g_nanox_data_key, free);
+}
+#endif
 
 #endif
+
+/**
+ * Human-readable error strings.  Read-only, so it is safe to share
+ * between all client tasks in a flat build.
+ */
+const char *nxErrorStrings[] = {
+	GR_ERROR_STRINGS
+};
 
 static void QueueEvent(GR_EVENT *ep);
 static void GetNextQueuedEvent(GR_EVENT *ep);
@@ -316,6 +332,7 @@ GrOpen(void)
 	if (!sockname)
 		sockname = GR_NAMED_SOCKET;
 #endif
+	INIT_PER_THREAD_DATA()
 	ACCESS_PER_THREAD_DATA()
 	
 	/* check already open*/
@@ -926,6 +943,7 @@ GrGetNextEvent(GR_EVENT *ep)
 void
 GrGetNextEventTimeout(GR_EVENT * ep, GR_TIMEOUT timeout)
 {
+	ACCESS_PER_THREAD_DATA()
 	LOCK(&nxGlobalLock);
 	if (evlist) {
 		/*DPRINTF("nxclient %d: Returning queued event\n",getpid());*/

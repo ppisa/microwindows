@@ -79,7 +79,7 @@ DRIVERS += drivers/genfont.o drivers/genmem.o drivers/fb.o
 DRIVERS += fonts/compiled/winFreeSansSerif11x13.o
 DRIVERS += fonts/compiled/X6x13.o
 NANOX = nanox/srvmain.o nanox/srvfunc.o nanox/srvutil.o nanox/srvevent.o \
-    nanox/nxutil.o nanox/nxdraw.o nanox/srvclip1.o
+    nanox/nxutil.o nanox/nxdraw.o nanox/nxpaintnc.o nanox/srvclip1.o
 NANOX += nanox/wmaction.o nanox/wmclients.o nanox/wmevents.o nanox/wmutil.o
 ENGINE = engine/devdraw.o engine/devmouse.o engine/devkbd.o engine/devclip1.o \
 	engine/devopen.o engine/devfont.o engine/devlist.o engine/devblit.o \

@@ -134,6 +134,11 @@
 #define NONETWORK		0		/* =1 to link Nano-X apps with server for standalone*/
 #endif
 
+#ifndef NX_PER_CLIENT_DATA
+/* =1 for per-client data in a single-process multi-threaded build (eCos or POSIX TLS)*/
+#define NX_PER_CLIENT_DATA	0
+#endif
+
 #ifndef NUKLEARUI
 #define NUKLEARUI		1		/* =0 to use older tan windows-style 3d window frame drawing/colors*/
 #endif
