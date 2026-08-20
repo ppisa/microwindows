@@ -43,6 +43,7 @@ NANOWMOBJS := \
 # Nano-X client files
 OBJS := \
 	$(MW_DIR_OBJ)/nanox/nxdraw.o \
+	$(MW_DIR_OBJ)/nanox/nxpaintnc.o \
 	$(MW_DIR_OBJ)/nanox/nxutil.o \
 	$(MW_DIR_OBJ)/nanox/nxtransform.o
 OBJS += $(NANOWMOBJS)

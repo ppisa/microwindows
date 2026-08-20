@@ -10,14 +10,18 @@
  * These definitions are not to be used by clients.
  */
 
-#if __ECOS && !defined(_NO_SVR_MAPPING)
+#if NX_PER_CLIENT_DATA && !defined(_NO_SVR_MAPPING)
 /*
- * Since eCos is a single task, multi-threaded environment, the
- * server and the client code share the same namespace.  This means
+ * In a single process, multi-threaded environment (NX_PER_CLIENT_DATA),
+ * the server and the client code share the same namespace.  This means
  * that server functions which are represented by dispatchers in
  * the client code need to have unique names, thus this remapping.
+ * This applies to eCos and NuttX flat builds where the server and the
+ * clients are linked into a single image.
  */
 #define nxErrorStrings		SVR_nxErrorStrings
+#define nxPaintNCArea		SVR_nxPaintNCArea
+
 #define GrArcAngle              SVR_GrArcAngle
 #define GrArc                   SVR_GrArc
 #define GrArea                  SVR_GrArea
@@ -30,6 +34,7 @@
 #define GrCopyArea              SVR_GrCopyArea
 #define GrCopyGC                SVR_GrCopyGC
 #define GrCreateFont            SVR_GrCreateFont
+#define GrCreateFontEx          SVR_GrCreateFontEx
 #define GrCreateTimer		SVR_GrCreateTimer        
 #define GrDelay			SVR_GrDelay
 #define GrDestroyCursor		SVR_GrDestroyCursor      
@@ -41,6 +46,7 @@
 #define GrDrawImageBits         SVR_GrDrawImageBits
 #define GrDrawImageFromBuffer	SVR_GrDrawImageFromBuffer
 #define GrDrawImageFromFile     SVR_GrDrawImageFromFile
+#define GrDrawImagePartToFit    SVR_GrDrawImagePartToFit
 #define GrDrawImageToFit        SVR_GrDrawImageToFit
 #define GrEllipse               SVR_GrEllipse
 #define GrEmptyRegion           SVR_GrEmptyRegion
@@ -64,20 +70,24 @@
 #define GrGetSystemPalette      SVR_GrGetSystemPalette
 #define GrGetWindowInfo         SVR_GrGetWindowInfo
 #define GrGetWMProperties       SVR_GrGetWMProperties
+#define GrGrabKey               SVR_GrGrabKey
 #define GrInjectKeyboardEvent   SVR_GrInjectKeyboardEvent
 #define GrInjectPointerEvent    SVR_GrInjectPointerEvent
 #define GrIntersectRegion       SVR_GrIntersectRegion
 #define GrKillWindow            SVR_GrKillWindow
 #define GrLine                  SVR_GrLine
+#define GrLoadImageFromBuffer   SVR_GrLoadImageFromBuffer
 #define GrLoadImageFromFile     SVR_GrLoadImageFromFile
 #define GrLowerWindow           SVR_GrLowerWindow
 #define GrMapWindow             SVR_GrMapWindow
 #define GrMoveCursor            SVR_GrMoveCursor
 #define GrMoveWindow            SVR_GrMoveWindow
+#define GrNewBitmapRegion       SVR_GrNewBitmapRegion
 #define GrNewCursor		SVR_GrNewCursor          
 #define GrNewGC                 SVR_GrNewGC
 #define GrNewInputWindow        SVR_GrNewInputWindow
 #define GrNewPixmap             SVR_GrNewPixmap
+#define GrNewPixmapEx           SVR_GrNewPixmapEx
 #define GrNewPolygonRegion      SVR_GrNewPolygonRegion
 #define GrNewRegion             SVR_GrNewRegion
 #define GrNewWindow             SVR_GrNewWindow
@@ -89,6 +99,7 @@
 #define GrPoint                 SVR_GrPoint
 #define GrPoly                  SVR_GrPoly
 #define GrQueryTree		SVR_GrQueryTree          
+#define GrQueryPointer          SVR_GrQueryPointer
 #define GrRaiseWindow           SVR_GrRaiseWindow
 #define GrReadArea              SVR_GrReadArea
 #define GrRectInRegion          SVR_GrRectInRegion
@@ -104,27 +115,40 @@
 #define GrSetFontAttr           SVR_GrSetFontAttr
 #define GrSetFontRotation       SVR_GrSetFontRotation
 #define GrSetFontSize           SVR_GrSetFontSize
+#define GrSetFontSizeEx         SVR_GrSetFontSizeEx
 #define GrSetGCBackground       SVR_GrSetGCBackground
+#define GrSetGCBackgroundPixelVal SVR_GrSetGCBackgroundPixelVal
 #define GrSetGCClipOrigin	SVR_GrSetGCClipOrigin
+#define GrSetGCDash             SVR_GrSetGCDash
+#define GrSetGCFillMode         SVR_GrSetGCFillMode
 #define GrSetGCFont             SVR_GrSetGCFont
 #define GrSetGCForeground       SVR_GrSetGCForeground
+#define GrSetGCForegroundPixelVal SVR_GrSetGCForegroundPixelVal
 #define GrSetGCGraphicsExposure	SVR_GrSetGCGraphicsExposure
+#define GrSetGCLineAttributes   SVR_GrSetGCLineAttributes
 #define GrSetGCMode             SVR_GrSetGCMode
 #define GrSetGCRegion           SVR_GrSetGCRegion
+#define GrSetGCStipple          SVR_GrSetGCStipple
+#define GrSetGCTSOffset         SVR_GrSetGCTSOffset
+#define GrSetGCTile             SVR_GrSetGCTile
 #define GrSetGCUseBackground    SVR_GrSetGCUseBackground
 #define GrSetPortraitMode	SVR_GrSetPortraitMode
 #define GrSetScreenSaverTimeout SVR_GrSetScreenSaverTimeout
 #define GrSetSelectionOwner     SVR_GrSetSelectionOwner
 #define GrSetSystemPalette      SVR_GrSetSystemPalette
+#define GrSetTransform          SVR_GrSetTransform
 #define GrSetWindowCursor	SVR_GrSetWindowCursor    
+#define GrSetWindowRegion       SVR_GrSetWindowRegion
 #define GrSetWMProperties       SVR_GrSetWMProperties
+#define GrStretchArea           SVR_GrStretchArea
 #define GrSubtractRegion        SVR_GrSubtractRegion
 #define GrText                  SVR_GrText
+#define GrUngrabKey             SVR_GrUngrabKey
 #define GrUnionRectWithRegion   SVR_GrUnionRectWithRegion
 #define GrUnionRegion           SVR_GrUnionRegion
 #define GrUnmapWindow           SVR_GrUnmapWindow
 #define GrXorRegion             SVR_GrXorRegion
-#endif /* __ECOS*/
+#endif /* NX_PER_CLIENT_DATA */
 
 #include "nano-X.h"
 #include "device.h"

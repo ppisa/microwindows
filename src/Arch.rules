@@ -222,6 +222,7 @@ TOOLSPREFIX = $(ARMTOOLSPREFIX)
 ECOS_PREFIX = /work/iPAQ/ecos/install
 INCLUDEDIRS += -I$(ECOS_PREFIX)/include
 DEFINES += -D__ECOS=1 -DUNIX=1 -DHAVE_SIGNAL=0 -DHAVE_MMAP=0 -DHAVE_SELECT=0
+DEFINES += -DNX_PER_CLIENT_DATA=1
 CFLAGS += -mcpu=strongarm -Wall -ffunction-sections -fdata-sections -O2 -g
 LDFLAGS += -nostdlib
 LIBM =

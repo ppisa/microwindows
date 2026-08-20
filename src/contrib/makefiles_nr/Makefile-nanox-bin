@@ -15,7 +15,7 @@ NANOXFILES := \
 	srvclip.o \
 	clientfb.o \
 	error.o \
-	nxdraw.o wmevents.o wmutil.o wmaction.o wmclients.o\
+	nxdraw.o nxpaintnc.o wmevents.o wmutil.o wmaction.o wmclients.o\
 	nxtransform.o srvnet.o client.o nxproto.o 
 
 OBJECTS += $(NANOXFILES)

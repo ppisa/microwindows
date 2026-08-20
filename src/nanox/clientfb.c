@@ -15,7 +15,9 @@
 #include <sys/mman.h>
 #endif
 
+#if !NX_PER_CLIENT_DATA
 LOCK_EXTERN(nxGlobalLock);	/* global lock for threads safety*/
+#endif
 
 typedef struct gr_clientfb GR_CLIENTFB;
 struct gr_clientfb {

@@ -278,7 +278,11 @@ MwSelect(BOOL canBlock)
 	 */
 	timeout = tout.tv_sec = tout.tv_usec = 0L;
 	to = &tout;
+#if NUTTX
+	int poll = !canBlock;
+#else
 	int poll = (!canBlock || dragwp);		/* just poll if can't block or window move in progress*/
+#endif
 	if (!poll)
 	{
 		timeout = MwGetNextTimeoutValue();	/* get next mwin timer or (MWTIMEOUT) -1L if none */

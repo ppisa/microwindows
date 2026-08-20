@@ -2,7 +2,12 @@
  * Included by mwconfig.h via -DMWCONFIG_FILE='"mwconfig.nuttx"'
  */
 
-#define NANOWM              1
+#undef  NUTTX
+#define NUTTX               1
+#ifndef NANOWM
+#define NANOWM              0
+#endif
+#define AUTO_START_SERVER   0
 #define USE_ALLOCA          1
 #define UNIX                1
 #define HAVE_MMAP           1
