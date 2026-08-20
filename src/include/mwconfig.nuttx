@@ -2,6 +2,8 @@
  * Included by mwconfig.h via -DMWCONFIG_FILE='"mwconfig.nuttx"'
  */
 
+#undef  NUTTX
+#define NUTTX               1
 #ifndef NANOWM
 #define NANOWM              0
 #endif
