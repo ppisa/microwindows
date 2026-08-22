@@ -105,7 +105,9 @@ select_fb_subdriver(PSD psd)
 	extern PSUBDRIVER fblinear24[4];
 	extern PSUBDRIVER fblinear32bgra[4];
 	extern PSUBDRIVER fblinear32rgba[4];
+#if ELKS
 	extern PSUBDRIVER memplan4[4];
+#endif
 
 #if ELKS
 	pdriver = memplan4;

@@ -307,35 +307,35 @@ GdRasterOp(PMWIMAGEHDR pixd, MWCOORD dx, MWCOORD dy, MWCOORD dw, MWCOORD dh, int
 	/* translate op to pix library format*/
 	op = raster_ops[op];
 
-    if (op == PIX_DST)   /* no-op */
-        return;
+	if (op == PIX_DST)   /* no-op */
+		return;
 
 	/* check padding to 32-bit boundary*/
 	assert((pixd->pitch & 3) == 0);
 
 	/* Check if operation is only on dest */
-    dd = pixGetDepth(pixd);
-    if (op == PIX_CLR || op == PIX_SET || op == PIX_NOT(PIX_DST)) {
-        rasteropUniLow(pixGetData(pixd),
-                       pixGetWidth(pixd), pixGetHeight(pixd), dd,
-                       pixGetWpl(pixd),
-                       dx, dy, dw, dh,
-                       op);
-        return;
-    }
+	dd = pixGetDepth(pixd);
+	if (op == PIX_CLR || op == PIX_SET || op == PIX_NOT(PIX_DST)) {
+		rasteropUniLow(pixGetData(pixd),
+		               pixGetWidth(pixd), pixGetHeight(pixd), dd,
+		               pixGetWpl(pixd),
+		               dx, dy, dw, dh,
+		               op);
+		return;
+	}
 
 	/* Check depth of src and dest; these must agree */
-    assert(dd == pixGetDepth(pixs));
+	assert(dd == pixGetDepth(pixs));
 
-    rasteropLow(pixGetData(pixd),
-                pixGetWidth(pixd), pixGetHeight(pixd), dd,
-                pixGetWpl(pixd),
-                dx, dy, dw, dh,
-                op,
-                pixGetData(pixs),
-                pixGetWidth(pixs), pixGetHeight(pixs),
-                pixGetWpl(pixs),
-                sx, sy);
+	rasteropLow(pixGetData(pixd),
+	            pixGetWidth(pixd), pixGetHeight(pixd), dd,
+	            pixGetWpl(pixd),
+	            dx, dy, dw, dh,
+	            op,
+	            pixGetData(pixs),
+	            pixGetWidth(pixs), pixGetHeight(pixs),
+	            pixGetWpl(pixs),
+	            sx, sy);
 }
 
 /*
