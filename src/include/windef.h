@@ -165,9 +165,9 @@ typedef LPCSTR LPCTSTR;
 #define __TEXT(quote) quote
 #define TEXT(quote) __TEXT(quote)
 
-typedef int (FAR *FARPROC)();
-typedef int (NEAR *NEARPROC)();
-typedef int (*PROC)();
+typedef int (FAR *FARPROC)(void);
+typedef int (NEAR *NEARPROC)(void);
+typedef int (*PROC)(void);
 
 #define MAKEWORD(a, b)      ((WORD)(((BYTE)(a)) | ((WORD)((BYTE)(b))) << 8))
 #define MAKELONG(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
