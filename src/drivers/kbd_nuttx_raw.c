@@ -38,23 +38,6 @@ KBDDEVICE kbddev =
   NULL
 };
 
-static MWKEY raw_byte_to_mwkey(uint8_t ch)
-{
-  switch (ch)
-    {
-    case 0x7f:
-      return MWKEY_BACKSPACE;
-    case 0x0a:
-      return MWKEY_ENTER;
-    default:
-      if (ch < 128)
-        {
-          return (MWKEY)ch;
-        }
-      return MWKEY_UNKNOWN;
-    }
-}
-
 static void raw_reset(void)
 {
   raw_buf_len = 0;
@@ -162,7 +145,7 @@ static int nuttxkbd_Read(MWKEY *kbuf, MWKEYMOD *mods, MWSCANCODE *scancode)
 
     case KBD_PRESS:
       {
-        MWKEY key = raw_byte_to_mwkey(ch);
+        MWKEY key = translate_ascii_byte(ch);
         if (key == MWKEY_UNKNOWN)
           {
             return KBD_NODATA;

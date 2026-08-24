@@ -78,6 +78,23 @@ static MWKEY translate_keycode(uint32_t code)
     }
 }
 
+static MWKEY translate_ascii_byte(uint32_t code)
+{
+  switch (code)
+    {
+    case 0x7f:
+      return MWKEY_BACKSPACE;
+    case 0x0a:
+      return MWKEY_ENTER;
+    default:
+      if (code < 128)
+        {
+          return (MWKEY)code;
+        }
+      return MWKEY_UNKNOWN;
+    }
+}
+
 static void update_modifiers(MWKEYMOD *modifiers, MWKEY key, int press)
 {
   MWKEYMOD mask = 0;
