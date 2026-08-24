@@ -92,7 +92,7 @@ static int nuttxkbd_Read(MWKEY *kbuf, MWKEYMOD *mods, MWSCANCODE *scancode)
   key = event.type == KBD_SPECPRESS ||
         event.type == KBD_SPECREL ?
         translate_keycode(event.code) :
-        event.code;
+        translate_ascii_byte(event.code);
   press = (event.type == KBD_PRESS) ||
         event.type == KBD_SPECPRESS;
 
