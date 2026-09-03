@@ -797,14 +797,14 @@ ShowScrollBar (HWND hWnd, int iSBar, BOOL bShow)
 
     {
         RECT rcWin, rcClient;
-        
+
         memcpy (&rcWin, &pWin->winrect.left, sizeof (RECT));
         rcClient.left = 0;
         rcClient.top  = 0;
         rcClient.right = pWin->clirect.right - pWin->clirect.left;
         rcClient.bottom = pWin->clirect.bottom - pWin->clirect.top;
-
-		/* fix: no WM_SIZECHANGED */
+        (void)rcClient;
+        /* fix: no WM_SIZECHANGED */
         //SendMessage(hWnd, WM_SIZECHANGED, (WPARAM)&rcWin, (LPARAM)&rcClient);
     }
     

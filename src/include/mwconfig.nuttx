@@ -2,6 +2,8 @@
  * Included by mwconfig.h via -DMWCONFIG_FILE='"mwconfig.nuttx"'
  */
 
+#pragma GCC diagnostic ignored "-Wundef"
+
 #undef  NUTTX
 #define NUTTX               1
 #ifndef NANOWM
