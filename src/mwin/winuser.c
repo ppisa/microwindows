@@ -489,7 +489,7 @@ CreateWindowEx(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName,
 	wp->cursor = pwp->cursor;
 	wp->cursor->usecount++;
 	wp->unmapcount = pwp->unmapcount + 1;
-	wp->id = (int)hMenu;				// OK: Not pointer. Menu id always passed as int.
+	wp->id = (int)(UINT_PTR)hMenu;				// OK: Not pointer. Menu id always passed as int.
 	wp->gotPaintMsg = PAINT_PAINTED;
 
 	titLen = 0;
@@ -1300,8 +1300,8 @@ GetClassLong(HWND hwnd, int nIndex)
 	case GCL_CBWNDEXTRA:
 		return (DWORD)hwnd->pClass->cbWndExtra;
 	case GCL_HBRBACKGROUND:
-		assert(sizeof(LONG_PTR) <= 32);		// 64bit must use GetClassLongPtr
-		return (DWORD)hwnd->pClass->hbrBackground;		// OK: Pointer size checked above and is 32 bit.
+		assert(sizeof(LONG_PTR) <= sizeof(DWORD));	// 64bit must use GetClassLongPtr
+		return (DWORD)(LONG_PTR)hwnd->pClass->hbrBackground;	// OK: Pointer size checked above and is 32 bit.
 	case GCL_HCURSOR:
 	case GCL_HICON:
 	case GCL_HMODULE:
@@ -1391,7 +1391,7 @@ SetWindowLongPtr(HWND hwnd, int nIndex, LONG_PTR lNewLong)
 		hwnd->lpfnWndProc = (WNDPROC)lNewLong;
 		break;
 	case GWL_WNDPROCBRIDGE:
-		hwnd->lpfnWndProcBridge = (WNDPROC)lNewLong;
+		hwnd->lpfnWndProcBridge = (WNDPROC)(UINT_PTR)lNewLong;
 		break;
 	case GWL_HINSTANCE:
 		hwnd->hInstance = (HINSTANCE)lNewLong;
@@ -1514,7 +1514,7 @@ SetProp(HWND hWnd, LPCSTR lpString, HANDLE hData)
 		return FALSE;
 	/* check if 16 bit atom passed instead of pointer*/
 	if (PTR_IS_ATOM(lpString))
-		pProp->Atom = LOWORD((DWORD)lpString);			// OK: Not pointer. Atom passed in low 16 bits.
+		pProp->Atom = LOWORD((DWORD)(UINT_PTR)lpString);	// OK: Not pointer. Atom passed in low 16 bits.
 	else
 		pProp->Atom = GlobalAddAtom(lpString);
 	pProp->hData = hData;
@@ -1532,7 +1532,7 @@ GetProp(HWND hWnd, LPCSTR lpString)
 
 	/* check if 16 bit atom passed instead of pointer*/
 	if (PTR_IS_ATOM(lpString))
-		Atom = LOWORD((DWORD)lpString);				// OK: Not pointer. Atom passed in low 16 bits.
+		Atom = LOWORD((DWORD)(UINT_PTR)lpString);	// OK: Not pointer. Atom passed in low 16 bits.
 	else
 		Atom = GlobalFindAtom(lpString);
 
@@ -1554,7 +1554,7 @@ RemoveProp(HWND hWnd, LPCSTR lpString)
 
 	/* check if 16 bit atom passed instead of pointer*/
 	if (PTR_IS_ATOM(lpString))
-		Atom = LOWORD((DWORD)lpString);				// OK: Not pointer. Atom passed in low 16 bits.
+		Atom = LOWORD((DWORD)(UINT_PTR)lpString);	// OK: Not pointer. Atom passed in low 16 bits.
 	else
 		Atom = GlobalFindAtom(lpString);
 
@@ -1656,11 +1656,11 @@ SetWindowPos(HWND hwnd, HWND hwndInsertAfter, int x, int y, int cx, int cy, UINT
 	hidden = hwnd->unmapcount || (fuFlags & SWP_NOREDRAW);
 
 	if(bZorder) {
-		switch((int)hwndInsertAfter) {			// OK: intentional HWND to int cast
-		case (int)(HWND)HWND_TOP:				// OK: intentional HWND to int cast
+		switch((int)(UINT_PTR)hwndInsertAfter) {	// OK: intentional HWND to int cast
+		case (int)(UINT_PTR)(HWND)HWND_TOP:		// OK: intentional HWND to int cast
 			MwRaiseWindow(hwnd);
 			break;
-		case (int)(HWND)HWND_BOTTOM:			// OK: intentional HWND to int cast
+		case (int)(UINT_PTR)(HWND)HWND_BOTTOM:		// OK: intentional HWND to int cast
 			MwLowerWindow(hwnd);
 			break;
 		default:

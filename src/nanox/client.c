@@ -4498,6 +4498,7 @@ GrQueryPointer(GR_WINDOW_ID *mwin, GR_COORD *x, GR_COORD *y, GR_BUTTON *bmask)
 
 	LOCK(&nxGlobalLock);
 	req = AllocReq(QueryPointer);
+	(void)req;
 	TypedReadBlock(mwin, sizeof(*mwin), GrNumQueryPointer);
 	ReadBlock(x, sizeof(*x));
 	ReadBlock(y, sizeof(*y));

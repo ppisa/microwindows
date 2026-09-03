@@ -376,16 +376,16 @@ UCHAR *p = (UCHAR *)&l;
 
 	for(i = cy-1; i>= 0; i--) {
 		/* turn image rightside up*/
-		unsigned char *p = imagebits + i*pitch;
+		unsigned char *p1 = imagebits + i*pitch;
 
 		if(compression == BI_RLE8) {
-			if(!DecodeRLE8(p, fp))
+			if(!DecodeRLE8(p1, fp))
 				break;
 		} else if(compression == BI_RLE4) {
-			if(!DecodeRLE4(p, fp))
+			if(!DecodeRLE4(p1, fp))
 				break;
 		} else {
-			if(fread(p, 1, pitch, fp) != (size_t)pitch) {
+			if(fread(p1, 1, pitch, fp) != (size_t)pitch) {
 				free(imagebits);
 				fprintf(stderr, "Error fread\n");
 				return -1;
@@ -401,9 +401,9 @@ UCHAR *p = (UCHAR *)&l;
 
 	/* then output each line in order*/
 	for (i=0; i<cy; i++) {
-		unsigned char *p = imagebits + i*pitch;
+		unsigned char *p1 = imagebits + i*pitch;
 
-		outline(p, bitdepth, pitch);
+		outline(p1, bitdepth, pitch);
 	}
 
    if(!s_flag) {
@@ -570,6 +570,7 @@ int		c, n, c1, c2;
 				continue;
 			default:			/* 0 3..255 xx nn uncompressed data*/
 				c2 = (n+3) & ~3;
+				c1 = 0;			/* initialize to suppress false warning */
 				for(c=0; c<c2; c++) {
 					if((c & 1) == 0)
 							c1 = fgetc(fp);

@@ -33,7 +33,7 @@ static MWBITMAPOBJ default_bitmap = {
 };
 
 static MWPALOBJ default_palette = {
-	{OBJ_PAL, TRUE}, 0, 0
+	{OBJ_PAL, TRUE}, {0, 0}
 };
 
 static BOOL MwExtTextOut(HDC hdc, int x, int y, UINT fuOptions,
@@ -784,7 +784,8 @@ FillRect(HDC hdc, CONST RECT *lprc, HBRUSH hbr)
 
 	/* handle COLOR_xxx + 1 passed as HBRUSH*/
 	if((UINT_PTR)obr <= MAXSYSCOLORS) {		// Convert pointer to long without truncation to check if small int passed
-		crFill = GetSysColor((int)obr-1);	// OK: Not pointer. Convert to int then decrement.
+		// OK: Not pointer. Convert to int then decrement.
+		crFill = GetSysColor((int)(UINT_PTR)obr-1);
 	} else {
 		/* get color from passed HBRUSH*/
 		if(obr->style == BS_NULL)

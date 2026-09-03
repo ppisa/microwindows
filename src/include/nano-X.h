@@ -962,13 +962,17 @@ GR_CURSOR_ID GrSetCursor(GR_WINDOW_ID wid, GR_SIZE width, GR_SIZE height,
 				GR_COORD hotx, GR_COORD hoty, GR_COLOR foreground,
 				GR_COLOR background, GR_BITMAP *fbbitmap, GR_BITMAP *bgbitmap);
 /*#define GrSetBorderColor			GrSetWindowBorderColor*/
+#undef GrCreateFont
 #define GrCreateFont(name,height,plogfont)	GrCreateFontEx(name,height,height,plogfont)
+#undef GrSetFontSize
 #define GrSetFontSize(fontid,height)		GrSetFontSizeEx(fontid,height,height)
+#undef GrNewPixmap
 #define GrNewPixmap(width,height,pixels)	GrNewPixmapEx(width,height,0,pixels)
 
 /* useful function macros*/
 #define GrClearWindow(wid,exposeflag)		GrClearArea(wid,0,0,0,0,exposeflag)
 #define GrFlushWindow(wid)			GrClearWindow(wid,2)
+#undef GrDrawImageToFit
 #define GrDrawImageToFit(id,gc,x,y,width,height,imageid) \
 		GrDrawImagePartToFit(id,gc,x,y,width,height,0,0,0,0,imageid)
 #define GrSetWindowBackgroundColor(wid,color) \

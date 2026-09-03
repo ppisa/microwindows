@@ -64,7 +64,8 @@ mwAddResource(HRSRC hRes)
 static int
 mwResCompare(LPCTSTR res1, LPCTSTR res2)
 {
-	if ((HIWORD(res1) == 0xFFFF) || (HIWORD(res2) == 0xFFFF))	// OK: Not pointer. Checks high word of resource DWORD.
+	// OK: Not pointer. Checks high word of resource DWORD.
+	if ((HIWORD((UINT_PTR)res1) == 0xFFFF) || (HIWORD((UINT_PTR)res2) == 0xFFFF))
 		return (res1 != res2);
 
 	// FIXME: resource string names not handled properly here
@@ -258,14 +259,14 @@ mwIsSameType(FILE * f, LPCTSTR id, BOOL * pEof)
 		return !(*pEof);
 	}
 	//  Resource may be specified in text or integer
-	if (HIWORD(id) == 0xFFFF) {
+	if (HIWORD((UINT_PTR)id) == 0xFFFF) {
 		w = resReadWord(f, pEof);
 		if (w != 0xFFFF)
 			return FALSE;
 		w = resReadWord(f, pEof);
 		if (*pEof)
 			return FALSE;
-		if (w == LOWORD((DWORD) id))
+		if (w == LOWORD((UINT_PTR) id))
 			return TRUE;
 	} else {
 		LPCTSTR p = id;
@@ -538,8 +539,8 @@ resDialogTemplate(BYTE *dest, LPCSTR caption, DWORD style, DWORD dwExtendedStyle
 	dialog->cdit = (WORD)cdit;
 
 	extra = (WORD *)(((BYTE *)dialog) + FIXSZ_MWDLGTEMPLATE);
-	*extra++ = (WORD)menu;		// OK: No string menus yet, menu id always passed as WORD.
-	*extra++ = (WORD)classname;	// OK: No string classes yet, class id always passed as WORD.
+	*extra++ = (WORD)(UINT_PTR)menu;	// OK: No string menus yet, menu id always passed as WORD.
+	*extra++ = (WORD)(UINT_PTR)classname;	// OK: No string classes yet, class id always passed as WORD.
 	if (caption)
 		while (*caption)
 			*extra++ = (WORD)*caption++;

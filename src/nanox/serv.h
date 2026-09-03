@@ -33,6 +33,7 @@
 #define GrCloseWindow           SVR_GrCloseWindow
 #define GrCopyArea              SVR_GrCopyArea
 #define GrCopyGC                SVR_GrCopyGC
+#undef GrCreateFont
 #define GrCreateFont            SVR_GrCreateFont
 #define GrCreateFontEx          SVR_GrCreateFontEx
 #define GrCreateTimer		SVR_GrCreateTimer        
@@ -47,6 +48,7 @@
 #define GrDrawImageFromBuffer	SVR_GrDrawImageFromBuffer
 #define GrDrawImageFromFile     SVR_GrDrawImageFromFile
 #define GrDrawImagePartToFit    SVR_GrDrawImagePartToFit
+#undef GrDrawImageToFit
 #define GrDrawImageToFit        SVR_GrDrawImageToFit
 #define GrEllipse               SVR_GrEllipse
 #define GrEmptyRegion           SVR_GrEmptyRegion
@@ -86,6 +88,7 @@
 #define GrNewCursor		SVR_GrNewCursor          
 #define GrNewGC                 SVR_GrNewGC
 #define GrNewInputWindow        SVR_GrNewInputWindow
+#undef GrNewPixmap
 #define GrNewPixmap             SVR_GrNewPixmap
 #define GrNewPixmapEx           SVR_GrNewPixmapEx
 #define GrNewPolygonRegion      SVR_GrNewPolygonRegion
@@ -114,6 +117,7 @@
 #define GrSetFocus              SVR_GrSetFocus
 #define GrSetFontAttr           SVR_GrSetFontAttr
 #define GrSetFontRotation       SVR_GrSetFontRotation
+#undef GrSetFontSize
 #define GrSetFontSize           SVR_GrSetFontSize
 #define GrSetFontSizeEx         SVR_GrSetFontSizeEx
 #define GrSetGCBackground       SVR_GrSetGCBackground
